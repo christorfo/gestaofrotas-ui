@@ -1,0 +1,43 @@
+<div class="dashboard-container">
+  <h1>Dashboard do Administrador</h1>
+
+  <section class="data-section">
+    <h2>Frota de Veículos</h2>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <table *ngIf="!errorMessage && veiculos.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>Placa</th>
+          <th>Modelo</th>
+          <th>Tipo</th>
+          <th>Ano</th>
+          <th>Quilometragem</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let veiculo of veiculos">
+          <td>{{ veiculo.placa }}</td>
+          <td>{{ veiculo.modelo }}</td>
+          <td>{{ veiculo.tipo }}</td>
+          <td>{{ veiculo.ano }}</td>
+          <td>{{ veiculo.quilometragemAtual }}</td>
+          <td>{{ veiculo.status }}</td>
+          <td>
+            <button class="btn-action">Editar</button>
+            <button class="btn-action btn-secondary">Manutenção</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="!errorMessage && veiculos.length === 0">
+      Nenhum veículo encontrado.
+    </p>
+  </section>
+</div>

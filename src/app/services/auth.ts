@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
-// Interface para a resposta do login (espelhando nosso DTO de backend)
 interface JwtResponse {
   token: string;
   type: string;
@@ -15,67 +15,61 @@ interface JwtResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  // URL base da nossa API de autenticação
   private apiUrl = 'http://localhost:8080/api/auth';
+  
+  // Injeta o PLATFORM_ID para saber se estamos no navegador ou no servidor
+  private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  /**
-   * Envia as credenciais para a API e armazena o token em caso de sucesso.
-   */
   login(credentials: { email: string, senha: string }): Observable<JwtResponse> {
     return this.http.post<JwtResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        // Armazena as informações recebidas no localStorage
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('userRoles', JSON.stringify(response.roles));
-        localStorage.setItem('userEmail', response.email);
+        // Só salva no localStorage se estivermos no navegador
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('authToken', response.token);
+          localStorage.setItem('userRoles', JSON.stringify(response.roles));
+          localStorage.setItem('userEmail', response.email);
+        }
       })
     );
   }
 
-  /**
-   * Remove os dados de autenticação e redireciona para a tela de login.
-   */
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRoles');
-    localStorage.removeItem('userEmail');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userRoles');
+      localStorage.removeItem('userEmail');
+    }
     this.router.navigate(['/login']);
   }
 
-  /**
-   * Retorna o token JWT armazenado.
-   */
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('authToken');
+    }
+    return null; // No servidor, não há token
   }
 
-  /**
-   * Verifica se o usuário está logado (se existe um token).
-   */
   isLoggedIn(): boolean {
-    return !!this.getToken(); // Retorna true se o token existir, false caso contrário
+    if (isPlatformBrowser(this.platformId)) {
+      return !!this.getToken();
+    }
+    return false; // No servidor, o usuário nunca está logado
   }
   
-  /**
-   * Retorna os papéis (roles) do usuário logado.
-   */
   getRoles(): string[] {
-    const roles = localStorage.getItem('userRoles');
-    return roles ? JSON.parse(roles) : [];
+    if (isPlatformBrowser(this.platformId)) {
+      const roles = localStorage.getItem('userRoles');
+      return roles ? JSON.parse(roles) : [];
+    }
+    return []; // No servidor, não há papéis
   }
 
-  /**
-   * Verifica se o usuário tem o papel de Administrador.
-   */
   isAdmin(): boolean {
     return this.getRoles().includes('ROLE_ADMINISTRADOR');
   }
 
-  /**
-   * Verifica se o usuário tem o papel de Motorista.
-   */
   isMotorista(): boolean {
     return this.getRoles().includes('ROLE_MOTORISTA');
   }

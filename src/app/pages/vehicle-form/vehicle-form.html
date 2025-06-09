@@ -1,7 +1,8 @@
 <div class="form-container">
-  <h2>Cadastrar Novo Veículo</h2>
-  <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm">
+  <h2>{{ isEditMode ? 'Editar Veículo' : 'Cadastrar Novo Veículo' }}</h2>
 
+  <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm">
+    
     <div class="form-group">
       <label for="placa">Placa</label>
       <input type="text" id="placa" name="placa" [(ngModel)]="veiculo.placa" required>
@@ -32,7 +33,7 @@
       <select id="status" name="status" [(ngModel)]="veiculo.status" required>
         <option value="DISPONIVEL">Disponível</option>
         <option value="INATIVO">Inativo</option>
-      </select>
+        </select>
     </div>
 
     <div *ngIf="errorMessage" class="error-message">

@@ -22,6 +22,11 @@ export const routes: Routes = [
     canActivate: [authGuard] 
   },
   { 
+    path: 'admin/veiculos/editar/:id', 
+    component: VehicleFormComponent,
+    canActivate: [authGuard] 
+  },
+  { 
     path: 'motorista/dashboard', 
     component: MotoristaDashboardComponent, // Deve usar o nome da CLASSE, não do arquivo
     canActivate: [authGuard]

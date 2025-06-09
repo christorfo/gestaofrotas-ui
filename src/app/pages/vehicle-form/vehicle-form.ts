@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { VeiculoService } from '../../services/veiculo';
 import { Veiculo } from '../../models/veiculo.model';
 
@@ -14,30 +14,56 @@ import { Veiculo } from '../../models/veiculo.model';
 export class VehicleFormComponent {
   private veiculoService = inject(VeiculoService);
   private router = inject(Router);
-
-  // Usamos Partial<Veiculo> porque o 'id' não existe na criação
-  veiculo: Partial<Veiculo> = {
-    placa: '',
-    modelo: '',
-    tipo: '',
-    ano: new Date().getFullYear(),
-    quilometragemAtual: 0,
-    status: 'DISPONIVEL'
-  };
-
+  private route = inject(ActivatedRoute); // Injeta a rota ativa para ler parâmetros
+  
+  veiculo: Partial<Veiculo> = {}; // Inicia como objeto vazio
+  isEditMode = false;
   errorMessage: string | null = null;
 
+  ngOnInit(): void {
+    // Pega o 'id' dos parâmetros da URL
+    const veiculoId = this.route.snapshot.paramMap.get('id');
+
+    if (veiculoId) {
+      // Se existe um ID, estamos em modo de edição
+      this.isEditMode = true;
+      const id = Number(veiculoId);
+      this.veiculoService.getVeiculoById(id).subscribe({
+        next: (data) => {
+          this.veiculo = data; // Preenche o formulário com os dados do veículo
+        },
+        error: (err) => {
+          this.errorMessage = 'Veículo não encontrado.';
+          console.error(err);
+        }
+      });
+    } else {
+      // Se não existe um ID, estamos em modo de criação
+      this.isEditMode = false;
+      this.veiculo = { // Preenche com valores padrão para um novo veículo
+        placa: '',
+        modelo: '',
+        tipo: '',
+        ano: new Date().getFullYear(),
+        quilometragemAtual: 0,
+        status: 'DISPONIVEL'
+      };
+    }
+  }
+
   onSubmit(): void {
-    this.veiculoService.createVeiculo(this.veiculo).subscribe({
-      next: (veiculoCriado) => {
-        console.log('Veículo criado com sucesso!', veiculoCriado);
-        // Redireciona de volta para o dashboard após o sucesso
-        this.router.navigate(['/admin/dashboard']);
-      },
-      error: (err) => {
-        this.errorMessage = `Erro ao criar veículo: ${err.error?.message || 'Verifique os dados e tente novamente.'}`;
-        console.error(err);
-      }
-    });
+    if (this.isEditMode && this.veiculo.id) {
+      // Lógica de Atualização
+      this.veiculoService.updateVeiculo(this.veiculo.id, this.veiculo as Veiculo).subscribe({
+        next: () => this.router.navigate(['/admin/dashboard']),
+        error: (err) => this.errorMessage = `Erro ao atualizar veículo: ${err.error?.message}`
+      });
+    } else {
+      // Lógica de Criação
+      this.veiculoService.createVeiculo(this.veiculo).subscribe({
+        next: () => this.router.navigate(['/admin/dashboard']),
+        error: (err) => this.errorMessage = `Erro ao criar veículo: ${err.error?.message}`
+      });
+    }
   }
 }

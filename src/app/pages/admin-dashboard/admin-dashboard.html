@@ -29,7 +29,7 @@
           <td>{{ veiculo.quilometragemAtual }}</td>
           <td>{{ veiculo.status }}</td>
           <td>
-            <button class="btn-action">Editar</button>
+            <button [routerLink]="['/admin/veiculos/editar', veiculo.id]" class="btn-action">Editar</button>
             <button class="btn-action btn-secondary">Detalhes</button>
           </td>
         </tr>

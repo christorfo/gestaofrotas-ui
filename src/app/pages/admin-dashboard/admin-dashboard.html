@@ -3,11 +3,11 @@
 
   <section class="data-section">
     <h2>Frota de Veículos</h2>
-    
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
 
+    <div class="header-actions">
+      <button routerLink="/admin/veiculos/novo" class="btn-primary">Novo Veículo</button>
+    </div>
+    
     <table *ngIf="!errorMessage && veiculos.length > 0" class="data-table">
       <thead>
         <tr>
@@ -30,14 +30,83 @@
           <td>{{ veiculo.status }}</td>
           <td>
             <button class="btn-action">Editar</button>
-            <button class="btn-action btn-secondary">Manutenção</button>
+            <button class="btn-action btn-secondary">Detalhes</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <p *ngIf="!errorMessage && veiculos.length === 0">Nenhum veículo encontrado.</p>
+  </section>
+
+  <section class="data-section">
+    <h2>Equipe de Motoristas</h2>
+
+    <table *ngIf="!errorMessage && motoristas.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>CNH</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let motorista of motoristas">
+          <td>{{ motorista.nomeCompleto }}</td>
+          <td>{{ motorista.email }}</td>
+          <td>{{ motorista.telefone }}</td>
+          <td>{{ motorista.cnhNumero }}</td>
+          <td>{{ motorista.status }}</td>
+          <td>
+            <button class="btn-action">Editar</button>
+            <button class="btn-action btn-secondary">Ocorrências</button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <p *ngIf="!errorMessage && veiculos.length === 0">
-      Nenhum veículo encontrado.
+    <p *ngIf="!errorMessage && motoristas.length === 0">Nenhum motorista encontrado.</p>
+  </section>
+
+  <section class="data-section">
+    <h2>Agendamentos</h2>
+
+    <table *ngIf="!errorMessage && agendamentos.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Motorista</th>
+          <th>Veículo (Placa)</th>
+          <th>Destino</th>
+          <th>Data/Hora Saída</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let agendamento of agendamentos">
+          <td>{{ agendamento.id }}</td>
+          <td>{{ agendamento.motorista.nome }}</td>
+          <td>{{ agendamento.veiculo.placa }}</td>
+          <td>{{ agendamento.destino }}</td>
+          <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ agendamento.status }}</td>
+          <td>
+            <button class="btn-action btn-secondary">Detalhes</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="!errorMessage && agendamentos.length === 0">
+      Nenhum agendamento encontrado.
     </p>
   </section>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
 </div>

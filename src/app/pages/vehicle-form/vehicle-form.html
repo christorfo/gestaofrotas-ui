@@ -1,0 +1,48 @@
+<div class="form-container">
+  <h2>Cadastrar Novo Veículo</h2>
+  <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm">
+
+    <div class="form-group">
+      <label for="placa">Placa</label>
+      <input type="text" id="placa" name="placa" [(ngModel)]="veiculo.placa" required>
+    </div>
+
+    <div class="form-group">
+      <label for="modelo">Modelo</label>
+      <input type="text" id="modelo" name="modelo" [(ngModel)]="veiculo.modelo" required>
+    </div>
+
+    <div class="form-group">
+      <label for="tipo">Tipo</label>
+      <input type="text" id="tipo" name="tipo" [(ngModel)]="veiculo.tipo" required>
+    </div>
+
+    <div class="form-group">
+      <label for="ano">Ano</label>
+      <input type="number" id="ano" name="ano" [(ngModel)]="veiculo.ano" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quilometragem">Quilometragem Atual</label>
+      <input type="number" id="quilometragem" name="quilometragem" [(ngModel)]="veiculo.quilometragemAtual" required>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status" [(ngModel)]="veiculo.status" required>
+        <option value="DISPONIVEL">Disponível</option>
+        <option value="INATIVO">Inativo</option>
+      </select>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="vehicleForm.invalid" class="btn-primary">Salvar</button>
+      <button type="button" routerLink="/admin/dashboard" class="btn-secondary">Cancelar</button>
+    </div>
+
+  </form>
+</div>

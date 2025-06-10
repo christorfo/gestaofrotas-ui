@@ -1,0 +1,25 @@
+<div class="details-container">
+    <ng-container *ngIf="veiculo; else loadingOrError">
+        <h1>Detalhes do Veículo: {{ veiculo.placa }}</h1>
+        <div class="details-grid">
+            <div class="detail-item"><strong>ID:</strong><span>{{ veiculo.id }}</span></div>
+            <div class="detail-item"><strong>Placa:</strong><span>{{ veiculo.placa }}</span></div>
+            <div class="detail-item"><strong>Modelo:</strong><span>{{ veiculo.modelo }}</span></div>
+            <div class="detail-item"><strong>Tipo:</strong><span>{{ veiculo.tipo }}</span></div>
+            <div class="detail-item"><strong>Ano:</strong><span>{{ veiculo.ano }}</span></div>
+            <div class="detail-item"><strong>Quilometragem:</strong><span>{{ veiculo.quilometragemAtual }} km</span>
+            </div>
+            <div class="detail-item"><strong>Status:</strong><span>{{ veiculo.status }}</span></div>
+        </div>
+        <div class="actions">
+            <button (click)="location.back()" class="btn-secondary">Voltar</button>
+        </div>
+    </ng-container>
+
+    <ng-template #loadingOrError>
+        <p *ngIf="errorMessage; else loading">{{ errorMessage }}</p>
+        <ng-template #loading>
+            <p>Carregando detalhes...</p>
+        </ng-template>
+    </ng-template>
+</div>

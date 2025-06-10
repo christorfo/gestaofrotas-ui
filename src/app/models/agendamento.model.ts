@@ -10,7 +10,14 @@ interface MotoristaResumo {
     nome: string;
 }
 
+export interface HistoricoStatus {
+    statusNovo: string;
+    dataHoraAlteracao: string;
+    usuarioResponsavel: string;
+}
+
 export interface Agendamento {
+    historicoStatus?: HistoricoStatus[];
     id: number;
     veiculo: VeiculoResumo;
     motorista: MotoristaResumo;

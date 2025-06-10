@@ -1,0 +1,28 @@
+<div class="details-container">
+    <ng-container *ngIf="motorista; else loadingOrError">
+        <h1>Detalhes do Motorista: {{ motorista.nomeCompleto }}</h1>
+        <div class="details-grid">
+            <div class="detail-item"><strong>ID:</strong><span>{{ motorista.id }}</span></div>
+            <div class="detail-item"><strong>Nome:</strong><span>{{ motorista.nomeCompleto }}</span></div>
+            <div class="detail-item"><strong>Email:</strong><span>{{ motorista.email }}</span></div>
+            <div class="detail-item"><strong>CPF:</strong><span>{{ motorista.cpf }}</span></div>
+            <div class="detail-item"><strong>Telefone:</strong><span>{{ motorista.telefone }}</span></div>
+            <div class="detail-item"><strong>CNH:</strong><span>{{ motorista.cnhNumero }}</span></div>
+            <div class="detail-item"><strong>Validade CNH:</strong><span>{{ motorista.cnhValidade | date:'dd/MM/yyyy'
+                    }}</span></div>
+            <div class="detail-item"><strong>Status:</strong><span>{{ motorista.status }}</span></div>
+            <div class="detail-item detail-full-width"><strong>Endereço:</strong><span>{{ motorista.endereco }}</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button (click)="location.back()" class="btn-secondary">Voltar</button>
+        </div>
+    </ng-container>
+
+    <ng-template #loadingOrError>
+        <p *ngIf="errorMessage; else loading">{{ errorMessage }}</p>
+        <ng-template #loading>
+            <p>Carregando detalhes...</p>
+        </ng-template>
+    </ng-template>
+</div>

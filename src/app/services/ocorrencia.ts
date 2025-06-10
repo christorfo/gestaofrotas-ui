@@ -18,4 +18,9 @@ export class OcorrenciaService {
   getOcorrencias(): Observable<Ocorrencia[]> {
     return this.http.get<Ocorrencia[]>(this.apiUrl);
   }
+
+  resolverOcorrencia(id: number): Observable<Ocorrencia> {
+    // Enviamos um corpo vazio {} pois é uma ação POST sem dados extras
+    return this.http.post<Ocorrencia>(`${this.apiUrl}/${id}/resolver`, {});
+  }
 }

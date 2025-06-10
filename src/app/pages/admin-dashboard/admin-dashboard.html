@@ -22,7 +22,19 @@
           <td>{{ veiculo.modelo }}</td>
           <td>{{ veiculo.status }}</td>
           <td>
-            <button [routerLink]="['/admin/veiculos/editar', veiculo.id]" class="btn-action">Editar</button>
+            <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
+              class="btn-action">
+              Editar
+            </button>
+
+            <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id)"
+              class="btn-action btn-success">
+              Liberar
+            </button>
+
+            <button *ngIf="veiculo.status === 'DISPONIVEL'" class="btn-action btn-secondary">
+              Registrar Manutenção
+            </button>
           </td>
         </tr>
       </tbody>
@@ -60,8 +72,10 @@
   </section>
 
   <section class="data-section">
-    <h2>Agendamentos</h2>
-    <button routerLink="/admin/agendamentos/novo" class="btn-primary">Novo Agendamento</button>
+    <div class="section-header">
+      <h2>Agendamentos</h2>
+      <button routerLink="/admin/agendamentos/novo" class="btn-primary">Novo Agendamento</button>
+    </div>
     <table *ngIf="!errorMessage && agendamentos.length > 0" class="data-table">
       <thead>
         <tr>

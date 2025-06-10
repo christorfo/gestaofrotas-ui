@@ -14,7 +14,7 @@ export class VeiculoService {
   getVeiculos(): Observable<Veiculo[]> {
     return this.http.get<Veiculo[]>(this.apiUrl);
   }
-  
+
   getVeiculoById(id: number): Observable<Veiculo> {
     return this.http.get<Veiculo>(`${this.apiUrl}/${id}`);
   }
@@ -25,5 +25,10 @@ export class VeiculoService {
 
   updateVeiculo(id: number, veiculoData: Veiculo): Observable<Veiculo> {
     return this.http.put<Veiculo>(`${this.apiUrl}/${id}`, veiculoData);
+  }
+
+  liberarVeiculo(id: number): Observable<Veiculo> {
+    // Enviamos um corpo vazio {} pois é uma requisição POST de ação
+    return this.http.post<Veiculo>(`${this.apiUrl}/${id}/liberar`, {});
   }
 }

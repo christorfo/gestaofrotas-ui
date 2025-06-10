@@ -5,6 +5,7 @@ import { Agendamento } from '../models/agendamento.model';
 import { environment } from '../../environments/environment';
 import { IniciarViagemRequest } from '../dto/iniciar-viagem-request.model';
 import { FinalizarViagemRequest } from '../dto/finalizar-viagem-request.model';
+import { AgendamentoRequest } from '../dto/agendamento-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,9 @@ export class AgendamentoService {
 
   finalizarViagem(id: number, data: FinalizarViagemRequest): Observable<Agendamento> {
     return this.http.post<Agendamento>(`${this.apiUrl}/${id}/finalizar`, data);
+  }
+
+  createAgendamento(agendamentoData: AgendamentoRequest): Observable<Agendamento> {
+    return this.http.post<Agendamento>(this.apiUrl, agendamentoData);
   }
 }

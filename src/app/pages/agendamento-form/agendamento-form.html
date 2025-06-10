@@ -1,1 +1,54 @@
-<p>agendamento-form works!</p>
+<div class="form-container">
+    <h2>Novo Agendamento</h2>
+
+    <form (ngSubmit)="onSubmit()" #agendamentoForm="ngForm">
+
+        <div class="form-group">
+            <label for="motorista">Motorista</label>
+            <select id="motorista" name="motorista" [(ngModel)]="agendamento.motoristaId" required>
+                <option [ngValue]="0" disabled>Selecione um motorista</option>
+                <option *ngFor="let motorista of motoristas" [value]="motorista.id">
+                    {{ motorista.nomeCompleto }}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="veiculo">Veículo</label>
+            <select id="veiculo" name="veiculo" [(ngModel)]="agendamento.veiculoId" required>
+                <option [ngValue]="0" disabled>Selecione um veículo</option>
+                <option *ngFor="let veiculo of veiculos" [value]="veiculo.id">
+                    {{ veiculo.modelo }} - ({{ veiculo.placa }})
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="dataHoraSaida">Data e Hora de Saída</label>
+            <input type="datetime-local" id="dataHoraSaida" name="dataHoraSaida" [(ngModel)]="agendamento.dataHoraSaida"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="destino">Destino</label>
+            <input type="text" id="destino" name="destino" [(ngModel)]="agendamento.destino" required>
+        </div>
+
+        <div class="form-group">
+            <label for="justificativa">Justificativa</label>
+            <textarea id="justificativa" name="justificativa" rows="3"
+                [(ngModel)]="agendamento.justificativa"></textarea>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit"
+                [disabled]="agendamentoForm.invalid || agendamento.veiculoId === 0 || agendamento.motoristaId === 0"
+                class="btn-primary">Agendar</button>
+            <button type="button" routerLink="/admin/dashboard" class="btn-secondary">Cancelar</button>
+        </div>
+    </form>
+</div>

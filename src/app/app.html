@@ -1,1 +1,8 @@
+<header *ngIf="authService.isLoggedIn()" class="main-header">
+  <div class="header-content">
+    <span>Logado como: <strong>{{ authService.getUserEmail() }}</strong></span>
+    <button (click)="authService.logout()" class="btn-logout">Sair</button>
+  </div>
+</header>
+
 <router-outlet></router-outlet>

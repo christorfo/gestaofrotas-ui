@@ -17,7 +17,7 @@ interface JwtResponse {
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
-  
+
   // Injeta o PLATFORM_ID para saber se estamos no navegador ou no servidor
   private platformId = inject(PLATFORM_ID);
 
@@ -58,7 +58,7 @@ export class AuthService {
     }
     return false; // No servidor, o usuário nunca está logado
   }
-  
+
   getRoles(): string[] {
     if (isPlatformBrowser(this.platformId)) {
       const roles = localStorage.getItem('userRoles');
@@ -73,5 +73,12 @@ export class AuthService {
 
   isMotorista(): boolean {
     return this.getRoles().includes('ROLE_MOTORISTA');
+  }
+
+  getUserEmail(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('userEmail');
+    }
+    return null;
   }
 }

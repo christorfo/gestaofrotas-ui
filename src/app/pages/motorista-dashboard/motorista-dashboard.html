@@ -31,6 +31,10 @@
                             class="btn-action btn-warning">
                             Finalizar Viagem
                         </button>
+                        <button *ngIf="agendamento.status !== 'AGENDADO' && agendamento.status !== 'EM_USO'"
+                            [routerLink]="['/agendamentos/detalhes', agendamento.id]" class="btn-action btn-secondary">
+                            Ver Detalhes
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -40,26 +44,39 @@
             Você não tem nenhum agendamento.
         </p>
     </section>
+</div>
 
-    <div *ngIf="modalAberto" class="modal-overlay">
-        <div class="modal-content">
-            <h3>{{ tipoAcao === 'iniciar' ? 'Iniciar Viagem' : 'Finalizar Viagem' }}</h3>
-            <p>Agendamento #{{ agendamentoSelecionado?.id }} para o veículo de placa {{
-                agendamentoSelecionado?.veiculo?.placa }}</p>
+<div *ngIf="modalAberto" class="modal-overlay">
+    <div class="modal-content">
+        <h3>{{ tipoAcao === 'iniciar' ? 'Iniciar Viagem' : 'Finalizar Viagem' }}</h3>
+        <p>Agendamento #{{ agendamentoSelecionado?.id }} para o veículo de placa {{
+            agendamentoSelecionado?.veiculo?.placa }}</p>
 
-            <p class="info-km" *ngIf="tipoAcao === 'iniciar'">
-                Quilometragem atual do veículo: <strong>{{ agendamentoSelecionado?.veiculo?.quilometragemAtual }}
-                    km</strong>
-            </p>
-            <p class="info-km" *ngIf="tipoAcao === 'finalizar'">
-                Quilometragem de saída da viagem: <strong>{{ agendamentoSelecionado?.quilometragemSaida }} km</strong>
-            </p>
+        <p class="info-km" *ngIf="tipoAcao === 'iniciar'">
+            Quilometragem atual do veículo: <strong>{{ agendamentoSelecionado?.veiculo?.quilometragemAtual }}
+                km</strong>
+        </p>
+        <p class="info-km" *ngIf="tipoAcao === 'finalizar'">
+            Quilometragem de saída da viagem: <strong>{{ agendamentoSelecionado?.quilometragemSaida }} km</strong>
+        </p>
 
-            <form #acaoForm="ngForm" (ngSubmit)="confirmarAcao()">
-                <div *ngIf="modalErrorMessage" class="error-message">
-                    {{ modalErrorMessage }}
-                </div>
-            </form>
-        </div>
+        <form #acaoForm="ngForm" (ngSubmit)="confirmarAcao()">
+            <div class="form-group">
+                <label for="quilometragem">Quilometragem</label>
+                <input type="number" id="quilometragem" name="quilometragem" [(ngModel)]="dadosAcao.quilometragem"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="observacoes">Observações (opcional)</label>
+                <textarea id="observacoes" name="observacoes" rows="3" [(ngModel)]="dadosAcao.observacoes"></textarea>
+            </div>
+            <div *ngIf="modalErrorMessage" class="error-message">
+                {{ modalErrorMessage }}
+            </div>
+            <div class="modal-actions">
+                <button type="button" (click)="fecharModal()" class="btn-secondary">Cancelar</button>
+                <button type="submit" [disabled]="acaoForm.invalid" class="btn-primary">Confirmar</button>
+            </div>
+        </form>
     </div>
 </div>

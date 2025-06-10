@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth-guard';
 import { VehicleFormComponent } from './pages/vehicle-form/vehicle-form';
 import { MotoristaFormComponent } from './pages/motorista-form/motorista-form';
 import { AgendamentoDetailsComponent } from './pages/agendamento-details/agendamento-details';
+import { AgendamentoFormComponent } from './pages/agendamento-form/agendamento-form';
 
 export const routes: Routes = [
   // Rota pública
@@ -46,6 +47,11 @@ export const routes: Routes = [
   {
     path: 'agendamentos/detalhes/:id',
     component: AgendamentoDetailsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/agendamentos/novo',
+    component: AgendamentoFormComponent,
     canActivate: [authGuard]
   },
 

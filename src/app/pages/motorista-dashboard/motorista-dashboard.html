@@ -1,1 +1,65 @@
-<p>motorista-dashboard works!</p>
+<div class="dashboard-container">
+    <h1>Meus Agendamentos</h1>
+
+    <section class="data-section">
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <table *ngIf="!errorMessage && agendamentos.length > 0" class="data-table">
+            <thead>
+                <tr>
+                    <th>Destino</th>
+                    <th>Veículo (Placa)</th>
+                    <th>Data/Hora Saída</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let agendamento of agendamentos">
+                    <td>{{ agendamento.destino }}</td>
+                    <td>{{ agendamento.veiculo.placa }}</td>
+                    <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{ agendamento.status }}</td>
+                    <td>
+                        <button *ngIf="agendamento.status === 'AGENDADO'" (click)="abrirModal(agendamento, 'iniciar')"
+                            class="btn-action btn-success">
+                            Iniciar Viagem
+                        </button>
+                        <button *ngIf="agendamento.status === 'EM_USO'" (click)="abrirModal(agendamento, 'finalizar')"
+                            class="btn-action btn-warning">
+                            Finalizar Viagem
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p *ngIf="!errorMessage && agendamentos.length === 0">
+            Você não tem nenhum agendamento.
+        </p>
+    </section>
+
+    <div *ngIf="modalAberto" class="modal-overlay">
+        <div class="modal-content">
+            <h3>{{ tipoAcao === 'iniciar' ? 'Iniciar Viagem' : 'Finalizar Viagem' }}</h3>
+            <p>Agendamento #{{ agendamentoSelecionado?.id }} para o veículo de placa {{
+                agendamentoSelecionado?.veiculo?.placa }}</p>
+
+            <p class="info-km" *ngIf="tipoAcao === 'iniciar'">
+                Quilometragem atual do veículo: <strong>{{ agendamentoSelecionado?.veiculo?.quilometragemAtual }}
+                    km</strong>
+            </p>
+            <p class="info-km" *ngIf="tipoAcao === 'finalizar'">
+                Quilometragem de saída da viagem: <strong>{{ agendamentoSelecionado?.quilometragemSaida }} km</strong>
+            </p>
+
+            <form #acaoForm="ngForm" (ngSubmit)="confirmarAcao()">
+                <div *ngIf="modalErrorMessage" class="error-message">
+                    {{ modalErrorMessage }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

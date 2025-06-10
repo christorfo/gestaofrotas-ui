@@ -1,0 +1,55 @@
+<div class="details-container">
+  <ng-container *ngIf="agendamento; else loadingOrError">
+    <h1>Detalhes do Agendamento #{{ agendamento.id }}</h1>
+    
+    <div class="details-grid">
+      <div class="detail-item">
+        <strong>Status:</strong>
+        <span>{{ agendamento.status }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Destino:</strong>
+        <span>{{ agendamento.destino }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Motorista:</strong>
+        <span>{{ agendamento.motorista.nome }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Veículo:</strong>
+        <span>{{ agendamento.veiculo.placa }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Saída Agendada:</strong>
+        <span>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div *ngIf="agendamento.dataHoraInicioViagem" class="detail-item">
+        <strong>Início da Viagem:</strong>
+        <span>{{ agendamento.dataHoraInicioViagem | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div *ngIf="agendamento.quilometragemSaida" class="detail-item">
+        <strong>Km Saída:</strong>
+        <span>{{ agendamento.quilometragemSaida }}</span>
+      </div>
+      <div *ngIf="agendamento.dataHoraRetorno" class="detail-item">
+        <strong>Fim da Viagem:</strong>
+        <span>{{ agendamento.dataHoraRetorno | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div *ngIf="agendamento.quilometragemFinal" class="detail-item">
+        <strong>Km Final:</strong>
+        <span>{{ agendamento.quilometragemFinal }}</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button (click)="voltar()" class="btn-secondary">Voltar</button>
+    </div>
+
+  </ng-container>
+
+  <ng-template #loadingOrError>
+    <p *ngIf="errorMessage; else loading">{{ errorMessage }}</p>
+    <ng-template #loading><p>Carregando detalhes...</p></ng-template>
+  </ng-template>
+</div>

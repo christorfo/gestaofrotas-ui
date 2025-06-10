@@ -82,7 +82,7 @@
           <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ agendamento.status }}</td>
           <td>
-            <button class="btn-action btn-secondary">Detalhes</button>
+            <button [routerLink]="['/agendamentos/detalhes', agendamento.id]" class="btn-action btn-secondary">Detalhes</button>
           </td>
         </tr>
       </tbody>

@@ -1,49 +1,55 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './pages/login/login'; 
-import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard'; 
+import { LoginComponent } from './pages/login/login';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard';
 import { MotoristaDashboardComponent } from './pages/motorista-dashboard/motorista-dashboard';
 import { authGuard } from './guards/auth-guard';
 import { VehicleFormComponent } from './pages/vehicle-form/vehicle-form';
 import { MotoristaFormComponent } from './pages/motorista-form/motorista-form';
+import { AgendamentoDetailsComponent } from './pages/agendamento-details/agendamento-details';
 
 export const routes: Routes = [
   // Rota pública
   { path: 'login', component: LoginComponent },
-  
+
   // Rotas protegidas que estavam causando o erro
-  { 
-    path: 'admin/dashboard', 
+  {
+    path: 'admin/dashboard',
     component: AdminDashboardComponent, // Deve usar o nome da CLASSE, não do arquivo
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
-  { 
-    path: 'admin/veiculos/novo', 
+  {
+    path: 'admin/veiculos/novo',
     component: VehicleFormComponent,
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
-  { 
-    path: 'admin/veiculos/editar/:id', 
+  {
+    path: 'admin/veiculos/editar/:id',
     component: VehicleFormComponent,
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
-  { 
-    path: 'motorista/dashboard', 
+  {
+    path: 'motorista/dashboard',
     component: MotoristaDashboardComponent, // Deve usar o nome da CLASSE, não do arquivo
     canActivate: [authGuard]
   },
-  { 
-    path: 'admin/motoristas/novo', 
+  {
+    path: 'admin/motoristas/novo',
     component: MotoristaFormComponent,
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
-  { 
-    path: 'admin/motoristas/editar/:id', 
+  {
+    path: 'admin/motoristas/editar/:id',
     component: MotoristaFormComponent,
-    canActivate: [authGuard] 
+    canActivate: [authGuard]
   },
-  
+  {
+    path: 'agendamentos/detalhes/:id',
+    component: AgendamentoDetailsComponent,
+    canActivate: [authGuard]
+  },
+
   // Rotas de redirecionamento no final
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' } 
+  { path: '**', redirectTo: '/login' }
 ];

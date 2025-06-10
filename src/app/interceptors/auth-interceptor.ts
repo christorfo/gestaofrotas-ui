@@ -1,14 +1,16 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth';
+import { environment } from '../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Injeta o AuthService para pegar o token
   const authService = inject(AuthService);
   const authToken = authService.getToken();
+  const apiUrl = environment.apiUrl;
 
-  // Se um token existir, clona a requisição e adiciona o cabeçalho de autorização
-  if (authToken) {
+  // Adiciona o token SOMENTE se a requisição for para a nossa API
+  if (authToken && req.url.startsWith(apiUrl)) {
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${authToken}`
@@ -17,6 +19,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(authReq);
   }
 
-  // Se não houver token, apenas passa a requisição original adiante
+  // Para todas as outras requisições (como a do ViaCEP), passa adiante sem modificar.
   return next(req);
 };

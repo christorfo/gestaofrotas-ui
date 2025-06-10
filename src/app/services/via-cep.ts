@@ -18,11 +18,11 @@ export interface ViaCepResponse {
 })
 export class ViaCepService {
   private http = inject(HttpClient);
+  // GARANTA QUE A URL COMECE COM https://
   private apiUrl = 'https://viacep.com.br/ws';
 
   consultarCep(cep: string): Observable<ViaCepResponse> {
-    // Remove caracteres não numéricos do CEP
     const cepNumerico = cep.replace(/\D/g, '');
-    return this.http.get<ViaCepResponse>(`<span class="math-inline">\{this\.apiUrl\}/</span>{cepNumerico}/json/`);
+    return this.http.get<ViaCepResponse>(`${this.apiUrl}/${cepNumerico}/json/`);
   }
 }

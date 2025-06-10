@@ -10,8 +10,13 @@ import { authInterceptor } from './interceptors/auth-interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(FormsModule), 
-    provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
+    importProvidersFrom(FormsModule),
+
+    provideHttpClient(
+      withInterceptors([authInterceptor]),
+      withFetch() // Habilita o uso da API fetch para o HttpClient
+    ),
+
     provideNgxMask()
   ]
 };

@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface JwtResponse {
   token: string;
@@ -15,7 +16,7 @@ interface JwtResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   
   // Injeta o PLATFORM_ID para saber se estamos no navegador ou no servidor
   private platformId = inject(PLATFORM_ID);

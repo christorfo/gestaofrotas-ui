@@ -27,17 +27,23 @@ export class MotoristaFormComponent implements OnInit {
   isEditMode = false;
   errorMessage: string | null = null;
   novaSenha = '';
-  today: string = ''; // 3. Propriedade para a data mínima
+  today: string = ''; // Propriedade para a data mínima
 
   ngOnInit(): void {
-    // 4. Define a data de hoje no formato YYYY-MM-DD para o atributo 'min' do input
-    this.today = new Date().toISOString().split('T')[0];
+    const dataAtual = new Date();
+    const ano = dataAtual.getFullYear();
+    // getMonth() retorna 0-11, então adicionamos 1. padStart garante o formato "0M" se o mês for menor que 10.
+    const mes = (dataAtual.getMonth() + 1).toString().padStart(2, '0');
+    // padStart garante o formato "0D" se o dia for menor que 10.
+    const dia = dataAtual.getDate().toString().padStart(2, '0');
+
+    // Monta a string no formato YYYY-MM-DD
+    this.today = `${ano}-${mes}-${dia}`;
 
     const motoristaId = this.route.snapshot.paramMap.get('id');
     if (motoristaId) {
       this.isEditMode = true;
       this.motoristaService.getMotoristaById(Number(motoristaId)).subscribe(data => {
-        // Formata a data de validade para o input
         if (data.cnhValidade) {
           data.cnhValidade = data.cnhValidade.split('T')[0];
         }
@@ -58,18 +64,18 @@ export class MotoristaFormComponent implements OnInit {
     }
   }
 
-onCepBlur(): void {
+  onCepBlur(): void {
     // Ponto de verificação 1: A função foi chamada?
     console.log('---[DEBUG]--- Passo 1: onCepBlur foi chamado.');
 
     const cep = this.motorista.cep;
-    
+
     // Ponto de verificação 2: Qual é o valor do CEP que estamos usando?
     console.log(`---[DEBUG]--- Passo 2: CEP capturado do formulário: "${cep}"`);
 
     // Usaremos uma condição de guarda mais simples para garantir que não seja o problema
     if (cep && cep.length >= 8) {
-      
+
       // Ponto de verificação 3: Estamos prestes a chamar o serviço?
       console.log('---[DEBUG]--- Passo 3: Condição válida. Chamando o ViaCepService...');
 
@@ -77,7 +83,7 @@ onCepBlur(): void {
         next: (data) => {
           // Ponto de verificação 4 (SUCESSO): Recebemos uma resposta da API?
           console.log('---[DEBUG]--- Passo 4 (SUCESSO): Dados recebidos do ViaCEP:', data);
-          
+
           this.zone.run(() => {
             if (!data.erro) {
               this.motorista = {
@@ -97,7 +103,7 @@ onCepBlur(): void {
         error: (err) => {
           // Ponto de verificação 4 (ERRO): A chamada da API falhou?
           console.error('---[DEBUG]--- Passo 4 (ERRO): A chamada para a API ViaCEP falhou.', err);
-          
+
           this.zone.run(() => {
             this.errorMessage = 'Erro ao consultar o CEP. Verifique o console para mais detalhes.';
             this.limparCamposEndereco();
@@ -121,6 +127,27 @@ onCepBlur(): void {
   }
 
   onSubmit(): void {
+    this.errorMessage = null;
+
+    if (this.motorista.nomeCompleto && this.motorista.nomeCompleto.trim() === '') {
+      this.errorMessage = 'Erro: O campo Nome Completo não pode conter apenas espaços.';
+      return; // Interrompe a submissão
+    }
+
+    if (this.motorista.cnhValidade) {
+      // Cria uma data para "hoje" sem levar em conta as horas, para uma comparação justa.
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+
+      // Cria a data de validade a partir do valor do formulário.
+      // Adicionar 'T00:00:00' ajuda a evitar problemas de fuso horário na conversão.
+      const dataValidade = new Date(this.motorista.cnhValidade + 'T00:00:00');
+
+      if (dataValidade < hoje) {
+        this.errorMessage = 'Erro: A data de validade da CNH não pode ser uma data passada.';
+        return; // INTERROMPE a submissão do formulário aqui mesmo.
+      }
+    }
     // Lógica de submit continua a mesma
     if (this.novaSenha) {
       this.motorista.senha = this.novaSenha;

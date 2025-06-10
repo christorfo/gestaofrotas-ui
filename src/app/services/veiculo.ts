@@ -2,13 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Veiculo } from '../models/veiculo.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VeiculoService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/veiculos';
+  private apiUrl = `${environment.apiUrl}/veiculos`;
 
   getVeiculos(): Observable<Veiculo[]> {
     return this.http.get<Veiculo[]>(this.apiUrl);

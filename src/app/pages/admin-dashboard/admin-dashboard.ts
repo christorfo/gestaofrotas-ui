@@ -11,6 +11,9 @@ import { MotoristaService } from '../../services/motorista';
 import { Agendamento } from '../../models/agendamento.model';
 import { AgendamentoService } from '../../services/agendamento';
 
+import { Ocorrencia } from '../../models/ocorrencia.model';
+import { OcorrenciaService } from '../../services/ocorrencia';
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -22,10 +25,12 @@ export class AdminDashboardComponent implements OnInit {
   private veiculoService = inject(VeiculoService);
   private motoristaService = inject(MotoristaService);
   private agendamentoService = inject(AgendamentoService);
+  private ocorrenciaService = inject(OcorrenciaService);
 
   veiculos: Veiculo[] = []; // Array para armazenar a lista de veículos
   motoristas: Motorista[] = []; // Array para armazenar a lista de motoristas
   agendamentos: Agendamento[] = []; // Array para armazenar a lista de agendamentos
+  ocorrencias: Ocorrencia[] = []; // Array para ocorrências
 
   errorMessage: string | null = null;
 
@@ -34,6 +39,7 @@ export class AdminDashboardComponent implements OnInit {
     this.carregarVeiculos();
     this.carregarMotoristas();
     this.carregarAgendamentos();
+    this.carregarOcorrencias();
   }
 
   carregarVeiculos(): void {
@@ -75,5 +81,12 @@ export class AdminDashboardComponent implements OnInit {
         }
       });
     }
+  }
+
+  carregarOcorrencias(): void {
+    this.ocorrenciaService.getOcorrencias().subscribe({
+      next: (data) => { this.ocorrencias = data; },
+      error: (err) => { this.errorMessage += ' Falha ao carregar ocorrências.'; }
+    });
   }
 }

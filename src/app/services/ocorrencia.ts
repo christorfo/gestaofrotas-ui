@@ -14,4 +14,8 @@ export class OcorrenciaService {
   registrarOcorrencia(request: OcorrenciaRequest): Observable<Ocorrencia> {
     return this.http.post<Ocorrencia>(this.apiUrl, request);
   }
+
+  getOcorrencias(): Observable<Ocorrencia[]> {
+    return this.http.get<Ocorrencia[]>(this.apiUrl);
+  }
 }

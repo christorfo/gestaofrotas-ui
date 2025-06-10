@@ -36,7 +36,7 @@
               [routerLink]="['/admin/veiculos', veiculo.id, 'manutencoes']" class="btn-action btn-secondary">
               Ver Manutenções
             </button>
-            
+
             <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/manutencoes/novo', veiculo.id]"
               class="btn-action btn-secondary">
               Registrar Manutenção
@@ -110,6 +110,36 @@
       </tbody>
     </table>
     <p *ngIf="!errorMessage && agendamentos.length === 0">Nenhum agendamento encontrado.</p>
+  </section>
+
+  <section class="data-section">
+    <h2>Ocorrências Registradas</h2>
+
+    <table *ngIf="!errorMessage && ocorrencias.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Veículo</th>
+          <th>Motorista</th>
+          <th>Descrição</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ocorrencia of ocorrencias">
+          <td>{{ ocorrencia.dataHoraRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ ocorrencia.veiculoPlaca }}</td>
+          <td>{{ ocorrencia.motoristaNome }}</td>
+          <td>{{ ocorrencia.descricao }}</td>
+          <td>{{ ocorrencia.status }}</td>
+          <td>
+            <button class="btn-action btn-secondary">Resolver</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="!errorMessage && ocorrencias.length === 0">Nenhuma ocorrência registrada.</p>
   </section>
 
   <div *ngIf="errorMessage" class="error-message">

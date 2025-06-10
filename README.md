@@ -1,59 +1,46 @@
-# GestaofrotasUi
+# Sistema de Gestão de Frotas - Interface Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.1.
+Esta é a interface de usuário (UI) para o Sistema de Gestão de Frotas, desenvolvida com Angular (v17+). É uma Single-Page Application (SPA) que consome a API de backend para fornecer uma experiência interativa e reativa para administradores e motoristas.
 
-## Development server
+## Funcionalidades Principais
 
-To start a local development server, run:
+-   **Tela de Login:** Autenticação segura com a API backend usando tokens JWT.
+-   **Roteamento Protegido:** Uso de Guardas de Rota (`AuthGuard`) para proteger páginas internas e garantir que apenas usuários autenticados e com o papel correto possam acessá-las.
+-   **Dashboard de Administrador:** Painel de controle central para visualizar e gerenciar listas de veículos, motoristas, agendamentos e ocorrências.
+-   **Formulários Interativos:** Formulários completos para criar e editar veículos e motoristas, com validação em tempo real e máscaras de campo (`ngx-mask`).
+-   **Dashboard de Motorista:** Visão personalizada para o motorista, onde ele pode ver seus agendamentos e interagir com eles (iniciar/finalizar viagens).
+-   **Integração com APIs:** Comunicação com a API de backend e com a API externa ViaCEP para autopreenchimento de endereço.
+-   **Componentes Standalone:** Projeto estruturado com a arquitetura moderna de componentes standalone do Angular.
 
-```bash
-ng serve
-```
+## Tecnologias Utilizadas
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+-   **Angular 17+**
+-   **TypeScript**
+-   **HTML5 / CSS3**
+-   **ngx-mask** (para máscaras de formulário)
+-   **Server-Side Rendering (SSR)** (configurado por padrão pelo Angular CLI)
 
-## Code scaffolding
+## Como Iniciar a Aplicação
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Pré-requisitos
 
-```bash
-ng generate component component-name
-```
+-   Node.js (versão LTS recomendada).
+-   Angular CLI instalado globalmente (`npm install -g @angular/cli`).
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Executando
 
-```bash
-ng generate --help
-```
+1.  Clone este repositório para sua máquina local.
+2.  Abra um terminal na pasta raiz do projeto.
+3.  Instale as dependências do projeto:
+    ```bash
+    npm install
+    ```
+4.  Execute o servidor de desenvolvimento:
+    ```bash
+    ng serve
+    ```
+5.  Abra seu navegador e acesse `http://localhost:4200`.
 
-## Building
+### Comunicação com o Backend
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Importante:** Para que a aplicação frontend funcione corretamente, o **backend (API) deve estar em execução** no endereço `http://localhost:8080`.

@@ -126,6 +126,16 @@ export class MotoristaFormComponent implements OnInit {
     };
   }
 
+  onSemNumeroChange(): void {
+    if (this.motorista.semNumero) {
+      // Se o checkbox for marcado, define o número como 'S/N' e o torna somente leitura (via [disabled])
+      this.motorista.numero = 'S/N';
+    } else {
+      // Se desmarcado, limpa o campo número para o usuário digitar
+      this.motorista.numero = '';
+    }
+  }
+
   onSubmit(): void {
     this.errorMessage = null;
 

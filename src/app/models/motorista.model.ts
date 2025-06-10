@@ -1,4 +1,6 @@
 export interface Motorista {
+    numero?: string;
+    semNumero?: boolean;
     id: number;
     nomeCompleto: string;
     email: string;

@@ -3,16 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
+// Importação de todos os modelos e serviços necessários
 import { Veiculo } from '../../models/veiculo.model';
-import { VeiculoService } from '../../services/veiculo';
-
 import { Motorista } from '../../models/motorista.model';
-import { MotoristaService } from '../../services/motorista';
-
 import { Agendamento } from '../../models/agendamento.model';
-import { AgendamentoService, AgendamentoFiltros } from '../../services/agendamento';
-
 import { Ocorrencia } from '../../models/ocorrencia.model';
+
+import { VeiculoService } from '../../services/veiculo';
+import { MotoristaService } from '../../services/motorista';
+import { AgendamentoService, AgendamentoFiltros } from '../../services/agendamento';
 import { OcorrenciaService } from '../../services/ocorrencia';
 
 @Component({
@@ -28,15 +27,24 @@ export class AdminDashboardComponent implements OnInit {
   private agendamentoService = inject(AgendamentoService);
   private ocorrenciaService = inject(OcorrenciaService);
 
-  veiculos: Veiculo[] = []; // Array para armazenar a lista de veículos
-  motoristas: Motorista[] = []; // Array para armazenar a lista de motoristas
-  agendamentos: Agendamento[] = []; // Array para armazenar a lista de agendamentos
-  ocorrencias: Ocorrencia[] = []; // Array para ocorrências
-  filtros: AgendamentoFiltros = {}; // Array para armazenar o valor dos filtros
+  // Propriedades para armazenar os dados das listas
+  veiculos: Veiculo[] = [];
+  motoristas: Motorista[] = [];
+  agendamentos: Agendamento[] = [];
+  ocorrencias: Ocorrencia[] = [];
 
+  // Propriedades para controlar o estado de carregamento de cada tabela
+  isLoadingVeiculos = false;
+  isLoadingMotoristas = false;
+  isLoadingAgendamentos = false;
+  isLoadingOcorrencias = false;
+
+  // Propriedade para o formulário de filtros de agendamento
+  filtros: AgendamentoFiltros = {};
+
+  // Propriedade para mensagens de erro
   errorMessage: string | null = null;
 
-  // ngOnInit é um "gancho de ciclo de vida" que é executado quando o componente é inicializado.
   ngOnInit(): void {
     this.carregarVeiculos();
     this.carregarMotoristas();
@@ -45,21 +53,35 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   carregarVeiculos(): void {
+    this.isLoadingVeiculos = true;
     this.veiculoService.getVeiculos().subscribe({
-      next: (data) => { this.veiculos = data; },
-      error: (err) => { this.errorMessage = 'Falha ao carregar a lista de veículos.'; }
+      next: (data) => {
+        this.veiculos = data;
+        this.isLoadingVeiculos = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Falha ao carregar a lista de veículos.';
+        this.isLoadingVeiculos = false;
+      }
     });
   }
 
   carregarMotoristas(): void {
+    this.isLoadingMotoristas = true;
     this.motoristaService.getMotoristas().subscribe({
-      next: (data) => { this.motoristas = data; },
-      error: (err) => { this.errorMessage = 'Falha ao carregar a lista de motoristas.'; }
+      next: (data) => {
+        this.motoristas = data;
+        this.isLoadingMotoristas = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Falha ao carregar a lista de motoristas.';
+        this.isLoadingMotoristas = false;
+      }
     });
   }
 
   carregarAgendamentos(): void {
-    // Limpa os filtros que estiverem vazios ou nulos
+    this.isLoadingAgendamentos = true;
     const filtrosAtivos: AgendamentoFiltros = {};
     if (this.filtros.dataInicio) filtrosAtivos.dataInicio = this.filtros.dataInicio;
     if (this.filtros.dataFim) filtrosAtivos.dataFim = this.filtros.dataFim;
@@ -67,54 +89,55 @@ export class AdminDashboardComponent implements OnInit {
     if (this.filtros.status) filtrosAtivos.status = this.filtros.status;
 
     this.agendamentoService.getAgendamentos(filtrosAtivos).subscribe({
-      next: (data) => { this.agendamentos = data; },
-      error: (err) => { this.errorMessage = 'Falha ao carregar a lista de agendamentos.'; }
+      next: (data) => {
+        this.agendamentos = data;
+        this.isLoadingAgendamentos = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Falha ao carregar a lista de agendamentos.';
+        this.isLoadingAgendamentos = false;
+      }
     });
-  }
-
-  onLiberarVeiculo(id: number): void {
-    if (confirm('Tem certeza que deseja liberar este veículo da manutenção?')) {
-      this.veiculoService.liberarVeiculo(id).subscribe({
-        next: () => {
-          // Recarrega a lista para mostrar o status atualizado
-          this.carregarVeiculos();
-        },
-        error: (err) => {
-          // Atualiza a mensagem de erro geral da página
-          this.errorMessage = `Erro ao liberar veículo: ${err.error?.message || 'Tente novamente.'}`;
-        }
-      });
-    }
   }
 
   carregarOcorrencias(): void {
+    this.isLoadingOcorrencias = true;
     this.ocorrenciaService.getOcorrencias().subscribe({
-      next: (data) => { this.ocorrencias = data; },
-      error: (err) => { this.errorMessage += ' Falha ao carregar ocorrências.'; }
+      next: (data) => {
+        this.ocorrencias = data;
+        this.isLoadingOcorrencias = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Falha ao carregar a lista de ocorrências.';
+        this.isLoadingOcorrencias = false;
+      }
     });
-  }
-
-  onResolverOcorrencia(id: number): void {
-    if (confirm('Tem certeza que deseja marcar esta ocorrência como resolvida?')) {
-      this.ocorrenciaService.resolverOcorrencia(id).subscribe({
-        next: () => {
-          // Recarrega a lista para mostrar o novo status
-          this.carregarOcorrencias();
-        },
-        error: (err) => {
-          this.errorMessage = `Erro ao resolver ocorrência: ${err.error?.message || 'Tente novamente.'}`;
-        }
-      });
-    }
   }
 
   onFiltrar(): void {
     this.carregarAgendamentos();
   }
 
-  // Novo método chamado pelo botão "Limpar"
   onLimparFiltros(): void {
-    this.filtros = {}; // Reseta o objeto de filtros
-    this.carregarAgendamentos(); // Recarrega a lista completa
+    this.filtros = {};
+    this.carregarAgendamentos();
+  }
+
+  onLiberarVeiculo(id: number): void {
+    if (confirm('Tem certeza que deseja liberar este veículo da manutenção?')) {
+      this.veiculoService.liberarVeiculo(id).subscribe({
+        next: () => this.carregarVeiculos(),
+        error: (err) => this.errorMessage = `Erro ao liberar veículo: ${err.error?.message || 'Tente novamente.'}`
+      });
+    }
+  }
+
+  onResolverOcorrencia(id: number): void {
+    if (confirm('Tem certeza que deseja marcar esta ocorrência como resolvida?')) {
+      this.ocorrenciaService.resolverOcorrencia(id).subscribe({
+        next: () => this.carregarOcorrencias(),
+        error: (err) => this.errorMessage = `Erro ao resolver ocorrência: ${err.error?.message || 'Tente novamente.'}`
+      });
+    }
   }
 }

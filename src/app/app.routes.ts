@@ -5,6 +5,7 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { MotoristaDashboardComponent } from './pages/motorista-dashboard/motorista-dashboard';
 import { authGuard } from './guards/auth-guard';
 import { VehicleFormComponent } from './pages/vehicle-form/vehicle-form';
+import { MotoristaFormComponent } from './pages/motorista-form/motorista-form';
 
 export const routes: Routes = [
   // Rota pública
@@ -30,6 +31,16 @@ export const routes: Routes = [
     path: 'motorista/dashboard', 
     component: MotoristaDashboardComponent, // Deve usar o nome da CLASSE, não do arquivo
     canActivate: [authGuard]
+  },
+  { 
+    path: 'admin/motoristas/novo', 
+    component: MotoristaFormComponent,
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'admin/motoristas/editar/:id', 
+    component: MotoristaFormComponent,
+    canActivate: [authGuard] 
   },
   
   // Rotas de redirecionamento no final

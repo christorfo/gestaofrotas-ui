@@ -4,9 +4,10 @@ export interface Motorista {
     email: string;
     cpf: string;
     cnhNumero: string;
-    cnhValidade: string; // A data virá como string no formato ISO
+    cnhValidade: string;
     telefone: string;
     status: 'ATIVO' | 'INATIVO';
     endereco?: string;
     cep?: string;
+    senha?: string;
 }

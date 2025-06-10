@@ -2,9 +2,8 @@
   <h1>Dashboard do Administrador</h1>
 
   <section class="data-section">
-    <h2>Frota de Veículos</h2>
-
-    <div class="header-actions">
+    <div class="section-header">
+      <h2>Frota de Veículos</h2>
       <button routerLink="/admin/veiculos/novo" class="btn-primary">Novo Veículo</button>
     </div>
     
@@ -13,9 +12,6 @@
         <tr>
           <th>Placa</th>
           <th>Modelo</th>
-          <th>Tipo</th>
-          <th>Ano</th>
-          <th>Quilometragem</th>
           <th>Status</th>
           <th>Ações</th>
         </tr>
@@ -24,31 +20,27 @@
         <tr *ngFor="let veiculo of veiculos">
           <td>{{ veiculo.placa }}</td>
           <td>{{ veiculo.modelo }}</td>
-          <td>{{ veiculo.tipo }}</td>
-          <td>{{ veiculo.ano }}</td>
-          <td>{{ veiculo.quilometragemAtual }}</td>
           <td>{{ veiculo.status }}</td>
           <td>
             <button [routerLink]="['/admin/veiculos/editar', veiculo.id]" class="btn-action">Editar</button>
-            <button class="btn-action btn-secondary">Detalhes</button>
           </td>
         </tr>
       </tbody>
     </table>
-    
     <p *ngIf="!errorMessage && veiculos.length === 0">Nenhum veículo encontrado.</p>
   </section>
 
   <section class="data-section">
-    <h2>Equipe de Motoristas</h2>
+    <div class="section-header">
+      <h2>Equipe de Motoristas</h2>
+      <button routerLink="/admin/motoristas/novo" class="btn-primary">Novo Motorista</button>
+    </div>
 
     <table *ngIf="!errorMessage && motoristas.length > 0" class="data-table">
       <thead>
         <tr>
           <th>Nome</th>
           <th>E-mail</th>
-          <th>Telefone</th>
-          <th>CNH</th>
           <th>Status</th>
           <th>Ações</th>
         </tr>
@@ -57,23 +49,18 @@
         <tr *ngFor="let motorista of motoristas">
           <td>{{ motorista.nomeCompleto }}</td>
           <td>{{ motorista.email }}</td>
-          <td>{{ motorista.telefone }}</td>
-          <td>{{ motorista.cnhNumero }}</td>
           <td>{{ motorista.status }}</td>
           <td>
-            <button class="btn-action">Editar</button>
-            <button class="btn-action btn-secondary">Ocorrências</button>
+            <button [routerLink]="['/admin/motoristas/editar', motorista.id]" class="btn-action">Editar</button>
           </td>
         </tr>
       </tbody>
     </table>
-
     <p *ngIf="!errorMessage && motoristas.length === 0">Nenhum motorista encontrado.</p>
   </section>
 
   <section class="data-section">
     <h2>Agendamentos</h2>
-
     <table *ngIf="!errorMessage && agendamentos.length > 0" class="data-table">
       <thead>
         <tr>
@@ -100,10 +87,7 @@
         </tr>
       </tbody>
     </table>
-
-    <p *ngIf="!errorMessage && agendamentos.length === 0">
-      Nenhum agendamento encontrado.
-    </p>
+    <p *ngIf="!errorMessage && agendamentos.length === 0">Nenhum agendamento encontrado.</p>
   </section>
 
   <div *ngIf="errorMessage" class="error-message">

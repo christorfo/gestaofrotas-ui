@@ -13,4 +13,16 @@ export class MotoristaService {
   getMotoristas(): Observable<Motorista[]> {
     return this.http.get<Motorista[]>(this.apiUrl);
   }
+
+  getMotoristaById(id: number): Observable<Motorista> {
+    return this.http.get<Motorista>(`${this.apiUrl}/${id}`);
+  }
+
+  createMotorista(motoristaData: Partial<Motorista>): Observable<Motorista> {
+    return this.http.post<Motorista>(this.apiUrl, motoristaData);
+  }
+
+  updateMotorista(id: number, motoristaData: Partial<Motorista>): Observable<Motorista> {
+    return this.http.put<Motorista>(`${this.apiUrl}/${id}`, motoristaData);
+  }
 }

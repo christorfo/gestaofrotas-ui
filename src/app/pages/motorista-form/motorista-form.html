@@ -1,0 +1,87 @@
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Editar Motorista' : 'Cadastrar Novo Motorista' }}</h2>
+  
+  <form (ngSubmit)="onSubmit()" #motoristaForm="ngForm">
+    
+    <div class="form-group">
+      <label for="nomeCompleto">Nome Completo</label>
+      <input type="text" id="nomeCompleto" name="nomeCompleto" [(ngModel)]="motorista.nomeCompleto" required #nomeInput="ngModel">
+      <div *ngIf="nomeInput.invalid && (nomeInput.dirty || nomeInput.touched)" class="error-message">
+        <div *ngIf="nomeInput.errors?.['required']">Nome completo é obrigatório.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" [(ngModel)]="motorista.email" required email #emailInput="ngModel">
+      <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="error-message">
+        <div *ngIf="emailInput.errors?.['required']">E-mail é obrigatório.</div>
+        <div *ngIf="emailInput.errors?.['email']">Formato de e-mail inválido.</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" name="cpf" [(ngModel)]="motorista.cpf" required mask="000.000.000-00" #cpfInput="ngModel">
+      <div *ngIf="cpfInput.invalid && (cpfInput.dirty || cpfInput.touched)" class="error-message">
+        <div *ngIf="cpfInput.errors?.['required']">CPF é obrigatório.</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="cnhNumero">Nº da CNH</label>
+      <input type="text" id="cnhNumero" name="cnhNumero" [(ngModel)]="motorista.cnhNumero" required mask="00000000000" required #cnhInput="ngModel">
+      <div *ngIf="cnhInput.invalid && (cnhInput.dirty || cnhInput.touched)" class="error-message">
+        <div *ngIf="cnhInput.errors?.['required']">Nº da CNH é obrigatório.</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="cnhValidade">Validade da CNH</label>
+      <input type="date" id="cnhValidade" name="cnhValidade" [(ngModel)]="motorista.cnhValidade" required #validadeInput="ngModel">
+      <div *ngIf="validadeInput.invalid && (validadeInput.dirty || validadeInput.touched)" class="error-message">
+        <div *ngIf="validadeInput.errors?.['required']">Data de validade é obrigatória.</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="telefone">Telefone</label>
+      <input type="text" id="telefone" name="telefone" [(ngModel)]="motorista.telefone" required mask="(00) 0000-0000||(00) 0 0000-0000" #telInput="ngModel">
+      <div *ngIf="telInput.invalid && (telInput.dirty || telInput.touched)" class="error-message">
+        <div *ngIf="telInput.errors?.['required']">Telefone é obrigatório.</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="cep">CEP</label>
+      <input type="text" id="cep" name="cep" [(ngModel)]="motorista.cep" mask="00000-000">
+    </div>
+    
+    <div class="form-group">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" [(ngModel)]="novaSenha" [required]="!isEditMode" minlength="8" #senhaInput="ngModel"
+             placeholder="{{ isEditMode ? 'Deixe em branco para não alterar' : 'Mínimo 8 caracteres' }}">
+      <div *ngIf="senhaInput.invalid && (senhaInput.dirty || senhaInput.touched)" class="error-message">
+        <div *ngIf="senhaInput.errors?.['required']">Senha é obrigatória para novos motoristas.</div>
+        <div *ngIf="senhaInput.errors?.['minlength']">A senha deve ter no mínimo 8 caracteres.</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status" [(ngModel)]="motorista.status" required>
+        <option value="ATIVO">Ativo</option>
+        <option value="INATIVO">Inativo</option>
+      </select>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="motoristaForm.invalid" class="btn-primary">Salvar</button>
+      <button type="button" routerLink="/admin/dashboard" class="btn-secondary">Cancelar</button>
+    </div>
+  </form>
+</div>

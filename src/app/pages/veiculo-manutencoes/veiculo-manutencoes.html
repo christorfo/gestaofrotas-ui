@@ -1,0 +1,31 @@
+<div class="details-container">
+    <h1>Histórico de Manutenção do Veículo #{{ veiculoId }}</h1>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <table *ngIf="!errorMessage && manutencoes.length > 0" class="data-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Km</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let manutencao of manutencoes">
+                <td>{{ manutencao.data | date:'dd/MM/yyyy' }}</td>
+                <td>{{ manutencao.tipo }}</td>
+                <td>{{ manutencao.descricao }}</td>
+                <td>{{ manutencao.valor | currency:'BRL' }}</td>
+                <td>{{ manutencao.quilometragem }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <p *ngIf="!errorMessage && manutencoes.length === 0">Nenhum registro de manutenção encontrado para este veículo.</p>
+
+    <div class="actions">
+        <button (click)="voltar()" class="btn-secondary">Voltar</button>
+    </div>
+</div>

@@ -32,7 +32,13 @@
               Liberar
             </button>
 
-            <button *ngIf="veiculo.status === 'DISPONIVEL'" class="btn-action btn-secondary">
+            <button *ngIf="veiculo.status === 'EM_MANUTENCAO'"
+              [routerLink]="['/admin/veiculos', veiculo.id, 'manutencoes']" class="btn-action btn-secondary">
+              Ver Manutenções
+            </button>
+            
+            <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/manutencoes/novo', veiculo.id]"
+              class="btn-action btn-secondary">
               Registrar Manutenção
             </button>
           </td>

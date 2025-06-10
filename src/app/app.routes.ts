@@ -8,6 +8,9 @@ import { VehicleFormComponent } from './pages/vehicle-form/vehicle-form';
 import { MotoristaFormComponent } from './pages/motorista-form/motorista-form';
 import { AgendamentoDetailsComponent } from './pages/agendamento-details/agendamento-details';
 import { AgendamentoFormComponent } from './pages/agendamento-form/agendamento-form';
+import { ManutencaoFormComponent } from './pages/manutencao-form/manutencao-form';
+import { VeiculoManutencoesComponent } from './pages/veiculo-manutencoes/veiculo-manutencoes';
+
 
 export const routes: Routes = [
   // Rota pública
@@ -55,6 +58,16 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  {
+    path: 'admin/manutencoes/novo/:veiculoId',
+    component: ManutencaoFormComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/veiculos/:veiculoId/manutencoes', // Rota para a nova página
+    component: VeiculoManutencoesComponent,
+    canActivate: [authGuard]
+  },
   // Rotas de redirecionamento no final
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }

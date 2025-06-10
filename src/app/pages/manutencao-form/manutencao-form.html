@@ -1,0 +1,45 @@
+<div class="form-container">
+    <h2>Registrar Nova Manutenção</h2>
+    <p>Para o veículo com ID: <strong>{{ manutencao.veiculoId }}</strong></p>
+
+    <form (ngSubmit)="onSubmit()" #manutencaoForm="ngForm">
+
+        <div class="form-group">
+            <label for="data">Data da Manutenção</label>
+            <input type="date" id="data" name="data" [(ngModel)]="manutencao.data" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo">Tipo</label>
+            <select id="tipo" name="tipo" [(ngModel)]="manutencao.tipo" required>
+                <option value="PREVENTIVA">Preventiva</option>
+                <option value="CORRETIVA">Corretiva</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="quilometragem">Quilometragem</label>
+            <input type="number" id="quilometragem" name="quilometragem" [(ngModel)]="manutencao.quilometragem"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="valor">Valor (R$)</label>
+            <input type="number" id="valor" name="valor" [(ngModel)]="manutencao.valor" required>
+        </div>
+
+        <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao" rows="4" [(ngModel)]="manutencao.descricao" required></textarea>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" [disabled]="manutencaoForm.invalid" class="btn-primary">Salvar</button>
+            <button type="button" routerLink="/admin/dashboard" class="btn-secondary">Cancelar</button>
+        </div>
+    </form>
+</div>

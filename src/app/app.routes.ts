@@ -10,6 +10,8 @@ import { AgendamentoDetailsComponent } from './pages/agendamento-details/agendam
 import { AgendamentoFormComponent } from './pages/agendamento-form/agendamento-form';
 import { ManutencaoFormComponent } from './pages/manutencao-form/manutencao-form';
 import { VeiculoManutencoesComponent } from './pages/veiculo-manutencoes/veiculo-manutencoes';
+import { OcorrenciaFormComponent } from './pages/ocorrencia-form/ocorrencia-form';
+
 
 
 export const routes: Routes = [
@@ -68,6 +70,12 @@ export const routes: Routes = [
     component: VeiculoManutencoesComponent,
     canActivate: [authGuard]
   },
+  {
+    path: 'motorista/ocorrencias/nova',
+    component: OcorrenciaFormComponent,
+    canActivate: [authGuard]
+  },
+  
   // Rotas de redirecionamento no final
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }

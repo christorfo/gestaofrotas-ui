@@ -1,1 +1,32 @@
-<p>ocorrencia-form works!</p>
+<div class="form-container">
+    <h2>Relatar Ocorrência</h2>
+
+    <form (ngSubmit)="onSubmit()" #ocorrenciaForm="ngForm">
+
+        <div class="form-group">
+            <label for="veiculo">Veículo</label>
+            <select id="veiculo" name="veiculo" [(ngModel)]="ocorrencia.veiculoId" required>
+                <option [ngValue]="0" disabled>Selecione o veículo com problema</option>
+                <option *ngFor="let veiculo of veiculos" [value]="veiculo.id">
+                    {{ veiculo.modelo }} - ({{ veiculo.placa }})
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="descricao">Descrição do Problema</label>
+            <textarea id="descricao" name="descricao" rows="5" [(ngModel)]="ocorrencia.descricao" required
+                placeholder="Descreva o problema ou comportamento estranho observado..."></textarea>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" [disabled]="ocorrenciaForm.invalid || ocorrencia.veiculoId === 0"
+                class="btn-primary">Enviar Relato</button>
+            <button type="button" routerLink="/motorista/dashboard" class="btn-secondary">Cancelar</button>
+        </div>
+    </form>
+</div>

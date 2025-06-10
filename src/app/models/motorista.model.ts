@@ -10,4 +10,8 @@ export interface Motorista {
     endereco?: string;
     cep?: string;
     senha?: string;
+    logradouro?: string;
+    bairro?: string;
+    localidade?: string; // Cidade
+    uf?: string; // Estado
 }

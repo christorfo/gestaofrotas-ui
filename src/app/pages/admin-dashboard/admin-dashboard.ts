@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 // Importação de todos os modelos e serviços necessários
 import { Veiculo } from '../../models/veiculo.model';
@@ -9,6 +10,7 @@ import { Motorista } from '../../models/motorista.model';
 import { Agendamento } from '../../models/agendamento.model';
 import { Ocorrencia } from '../../models/ocorrencia.model';
 
+// Corrigindo os caminhos dos imports para incluir o sufixo do arquivo
 import { VeiculoService } from '../../services/veiculo';
 import { MotoristaService } from '../../services/motorista';
 import { AgendamentoService, AgendamentoFiltros } from '../../services/agendamento';
@@ -33,11 +35,8 @@ export class AdminDashboardComponent implements OnInit {
   agendamentos: Agendamento[] = [];
   ocorrencias: Ocorrencia[] = [];
 
-  // Propriedades para controlar o estado de carregamento de cada tabela
-  isLoadingVeiculos = false;
-  isLoadingMotoristas = false;
-  isLoadingAgendamentos = false;
-  isLoadingOcorrencias = false;
+  // Usaremos uma única variável para o carregamento inicial da página
+  isLoading = false;
 
   // Propriedade para o formulário de filtros de agendamento
   filtros: AgendamentoFiltros = {};
@@ -46,87 +45,57 @@ export class AdminDashboardComponent implements OnInit {
   errorMessage: string | null = null;
 
   ngOnInit(): void {
-    this.carregarVeiculos();
-    this.carregarMotoristas();
-    this.carregarAgendamentos();
-    this.carregarOcorrencias();
+    this.carregarDadosIniciais();
   }
 
-  carregarVeiculos(): void {
-    this.isLoadingVeiculos = true;
-    this.veiculoService.getVeiculos().subscribe({
-      next: (data) => {
-        this.veiculos = data;
-        this.isLoadingVeiculos = false;
+  carregarDadosIniciais(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    // forkJoin executa todas as chamadas em paralelo e só emite o resultado quando TODAS terminarem
+    forkJoin({
+      veiculos: this.veiculoService.getVeiculos(),
+      motoristas: this.motoristaService.getMotoristas(),
+      agendamentos: this.agendamentoService.getAgendamentos(), // Carrega agendamentos sem filtro inicialmente
+      ocorrencias: this.ocorrenciaService.getOcorrencias()
+    }).subscribe({
+      next: (resultados) => {
+        // Atribui todos os resultados de uma só vez, garantindo consistência
+        this.veiculos = resultados.veiculos;
+        this.motoristas = resultados.motoristas;
+        this.agendamentos = resultados.agendamentos;
+        this.ocorrencias = resultados.ocorrencias;
+        this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = 'Falha ao carregar a lista de veículos.';
-        this.isLoadingVeiculos = false;
+        this.errorMessage = 'Falha ao carregar os dados do dashboard. Por favor, tente recarregar a página.';
+        this.isLoading = false;
       }
     });
   }
 
-  carregarMotoristas(): void {
-    this.isLoadingMotoristas = true;
-    this.motoristaService.getMotoristas().subscribe({
-      next: (data) => {
-        this.motoristas = data;
-        this.isLoadingMotoristas = false;
-      },
-      error: (err) => {
-        this.errorMessage = 'Falha ao carregar a lista de motoristas.';
-        this.isLoadingMotoristas = false;
-      }
-    });
-  }
-
-  carregarAgendamentos(): void {
-    this.isLoadingAgendamentos = true;
-    const filtrosAtivos: AgendamentoFiltros = {};
-    if (this.filtros.dataInicio) filtrosAtivos.dataInicio = this.filtros.dataInicio;
-    if (this.filtros.dataFim) filtrosAtivos.dataFim = this.filtros.dataFim;
-    if (this.filtros.motoristaId) filtrosAtivos.motoristaId = this.filtros.motoristaId;
-    if (this.filtros.status) filtrosAtivos.status = this.filtros.status;
-
-    this.agendamentoService.getAgendamentos(filtrosAtivos).subscribe({
+  // O método de filtrar agora só precisa recarregar a lista de agendamentos
+  onFiltrar(): void {
+    // Para feedback visual, podemos ter um loading específico para a tabela de agendamentos
+    this.agendamentoService.getAgendamentos(this.filtros).subscribe({
       next: (data) => {
         this.agendamentos = data;
-        this.isLoadingAgendamentos = false;
       },
       error: (err) => {
-        this.errorMessage = 'Falha ao carregar a lista de agendamentos.';
-        this.isLoadingAgendamentos = false;
+        this.errorMessage = 'Falha ao aplicar o filtro de agendamentos.';
       }
     });
-  }
-
-  carregarOcorrencias(): void {
-    this.isLoadingOcorrencias = true;
-    this.ocorrenciaService.getOcorrencias().subscribe({
-      next: (data) => {
-        this.ocorrencias = data;
-        this.isLoadingOcorrencias = false;
-      },
-      error: (err) => {
-        this.errorMessage = 'Falha ao carregar a lista de ocorrências.';
-        this.isLoadingOcorrencias = false;
-      }
-    });
-  }
-
-  onFiltrar(): void {
-    this.carregarAgendamentos();
   }
 
   onLimparFiltros(): void {
     this.filtros = {};
-    this.carregarAgendamentos();
+    this.onFiltrar(); // Chama o método de filtrar para recarregar a lista completa
   }
 
   onLiberarVeiculo(id: number): void {
     if (confirm('Tem certeza que deseja liberar este veículo da manutenção?')) {
       this.veiculoService.liberarVeiculo(id).subscribe({
-        next: () => this.carregarVeiculos(),
+        next: () => this.carregarDadosIniciais(), // Recarrega tudo para garantir consistência
         error: (err) => this.errorMessage = `Erro ao liberar veículo: ${err.error?.message || 'Tente novamente.'}`
       });
     }
@@ -135,7 +104,7 @@ export class AdminDashboardComponent implements OnInit {
   onResolverOcorrencia(id: number): void {
     if (confirm('Tem certeza que deseja marcar esta ocorrência como resolvida?')) {
       this.ocorrenciaService.resolverOcorrencia(id).subscribe({
-        next: () => this.carregarOcorrencias(),
+        next: () => this.carregarDadosIniciais(), // Recarrega tudo para garantir consistência
         error: (err) => this.errorMessage = `Erro ao resolver ocorrência: ${err.error?.message || 'Tente novamente.'}`
       });
     }

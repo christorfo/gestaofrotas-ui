@@ -1,166 +1,170 @@
 <div class="dashboard-container">
   <h1>Dashboard do Administrador</h1>
 
-  <div *ngIf="isLoading" class="spinner-container">
-    <div class="spinner"></div>
-    <p>Carregando dados do dashboard...</p>
-  </div>
-
-  <div *ngIf="errorMessage && !isLoading" class="error-message">
+  <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
   </div>
 
-  <div *ngIf="!isLoading && !errorMessage">
+  <section class="data-section">
+    <div class="section-header">
+      <h2>Frota de Veículos</h2>
+      <button routerLink="/admin/veiculos/novo" class="btn-primary">Novo Veículo</button>
+    </div>
+    <div *ngIf="isLoadingVeiculos" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <table *ngIf="!isLoadingVeiculos && veiculos.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>Placa</th>
+          <th>Modelo</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let veiculo of veiculos">
+          <td>{{ veiculo.placa }}</td>
+          <td>{{ veiculo.modelo }}</td>
+          <td>{{ veiculo.status }}</td>
+          <td>
+            <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
+              class="btn-action">Editar</button>
+            <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id)"
+              class="btn-action btn-success">Liberar</button>
+            <button [routerLink]="['/admin/veiculos/detalhes', veiculo.id]"
+              class="btn-action btn-secondary">Detalhes</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="!isLoadingVeiculos && veiculos.length === 0">Nenhum veículo encontrado.</p>
+  </section>
 
-    <section class="data-section">
-      <div class="section-header">
-        <h2>Frota de Veículos</h2>
-        <button routerLink="/admin/veiculos/novo" class="btn-primary">Novo Veículo</button>
+  <section class="data-section">
+    <div class="section-header">
+      <h2>Equipe de Motoristas</h2>
+      <button routerLink="/admin/motoristas/novo" class="btn-primary">Novo Motorista</button>
+    </div>
+    <div *ngIf="isLoadingMotoristas" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <table *ngIf="!isLoadingMotoristas && motoristas.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let motorista of motoristas">
+          <td>{{ motorista.nomeCompleto }}</td>
+          <td>{{ motorista.email }}</td>
+          <td>{{ motorista.status }}</td>
+          <td>
+            <button [routerLink]="['/admin/motoristas/editar', motorista.id]" class="btn-action">Editar</button>
+            <button [routerLink]="['/admin/motoristas/detalhes', motorista.id]"
+              class="btn-action btn-secondary">Detalhes</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="!isLoadingMotoristas && motoristas.length === 0">Nenhum motorista encontrado.</p>
+  </section>
+
+  <section class="data-section">
+    <div class="section-header">
+      <h2>Agendamentos</h2>
+      <button routerLink="/admin/agendamentos/novo" class="btn-primary">Novo Agendamento</button>
+    </div>
+    <form (ngSubmit)="onFiltrar()" #filtroForm="ngForm" class="filter-form">
+      <div class="filter-group">
+        <div class="form-group"><label for="dataInicio">Data Início</label><input type="date" id="dataInicio"
+            name="dataInicio" [(ngModel)]="filtros.dataInicio"></div>
+        <div class="form-group"><label for="dataFim">Data Fim</label><input type="date" id="dataFim" name="dataFim"
+            [(ngModel)]="filtros.dataFim"></div>
+        <div class="form-group"><label for="filtroMotorista">Motorista</label><select id="filtroMotorista"
+            name="filtroMotorista" [(ngModel)]="filtros.motoristaId">
+            <option [ngValue]="null">Todos</option>
+            <option *ngFor="let motorista of motoristas" [value]="motorista.id">{{ motorista.nomeCompleto }}</option>
+          </select></div>
+        <div class="form-group"><label for="filtroStatus">Status</label><select id="filtroStatus" name="filtroStatus"
+            [(ngModel)]="filtros.status">
+            <option [ngValue]="null">Todos</option>
+            <option value="AGENDADO">Agendado</option>
+            <option value="EM_USO">Em Uso</option>
+            <option value="FINALIZADO">Finalizado</option>
+            <option value="CANCELADO">Cancelado</option>
+          </select></div>
       </div>
-      <table *ngIf="veiculos.length > 0" class="data-table">
-        <thead>
-          <tr>
-            <th>Placa</th>
-            <th>Modelo</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let veiculo of veiculos">
-            <td>{{ veiculo.placa }}</td>
-            <td>{{ veiculo.modelo }}</td>
-            <td>{{ veiculo.status }}</td>
-            <td>
-              <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
-                class="btn-action">Editar</button>
-              <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id)"
-                class="btn-action btn-success">Liberar</button>
-              <button [routerLink]="['/admin/veiculos/detalhes', veiculo.id]"
-                class="btn-action btn-secondary">Detalhes</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p *ngIf="veiculos.length === 0">Nenhum veículo encontrado.</p>
-    </section>
+      <div class="filter-actions"><button type="submit" class="btn-primary">Filtrar</button><button type="button"
+          (click)="onLimparFiltros()" class="btn-secondary">Limpar</button></div>
+    </form>
+    <div *ngIf="isLoadingAgendamentos" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <table *ngIf="!isLoadingAgendamentos && agendamentos.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Motorista</th>
+          <th>Veículo (Placa)</th>
+          <th>Destino</th>
+          <th>Data/Hora Saída</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let agendamento of agendamentos">
+          <td>{{ agendamento.id }}</td>
+          <td>{{ agendamento.motorista.nome }}</td>
+          <td>{{ agendamento.veiculo.placa }}</td>
+          <td>{{ agendamento.destino }}</td>
+          <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ agendamento.status }}</td>
+          <td><button [routerLink]="['/agendamentos/detalhes', agendamento.id]"
+              class="btn-action btn-secondary">Detalhes</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="!isLoadingAgendamentos && agendamentos.length === 0">Nenhum agendamento encontrado.</p>
+  </section>
 
-    <section class="data-section">
-      <div class="section-header">
-        <h2>Equipe de Motoristas</h2>
-        <button routerLink="/admin/motoristas/novo" class="btn-primary">Novo Motorista</button>
-      </div>
-      <table *ngIf="motoristas.length > 0" class="data-table">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let motorista of motoristas">
-            <td>{{ motorista.nomeCompleto }}</td>
-            <td>{{ motorista.email }}</td>
-            <td>{{ motorista.status }}</td>
-            <td>
-              <button [routerLink]="['/admin/motoristas/editar', motorista.id]" class="btn-action">Editar</button>
-              <button [routerLink]="['/admin/motoristas/detalhes', motorista.id]"
-                class="btn-action btn-secondary">Detalhes</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p *ngIf="motoristas.length === 0">Nenhum motorista encontrado.</p>
-    </section>
+  <section class="data-section">
+    <h2>Ocorrências Registradas</h2>
+    <div *ngIf="isLoadingOcorrencias" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <table *ngIf="!isLoadingOcorrencias && ocorrencias.length > 0" class="data-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Veículo</th>
+          <th>Motorista</th>
+          <th>Descrição</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ocorrencia of ocorrencias">
+          <td>{{ ocorrencia.dataHoraRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ ocorrencia.veiculoPlaca }}</td>
+          <td>{{ ocorrencia.motoristaNome }}</td>
+          <td>{{ ocorrencia.descricao }}</td>
+          <td>{{ ocorrencia.status }}</td>
+          <td>
+            <button *ngIf="ocorrencia.status === 'ABERTA'" (click)="onResolverOcorrencia(ocorrencia.id)"
+              class="btn-action btn-success">Resolver</button>
+            <span *ngIf="ocorrencia.status !== 'ABERTA'">Resolvida</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="!isLoadingOcorrencias && ocorrencias.length === 0">Nenhuma ocorrência registrada.</p>
+  </section>
 
-    <section class="data-section">
-      <div class="section-header">
-        <h2>Agendamentos</h2>
-        <button routerLink="/admin/agendamentos/novo" class="btn-primary">Novo Agendamento</button>
-      </div>
-      <form (ngSubmit)="onFiltrar()" #filtroForm="ngForm" class="filter-form">
-        <div class="filter-group">
-          <div class="form-group"><label for="dataInicio">Data Início</label><input type="date" id="dataInicio"
-              name="dataInicio" [(ngModel)]="filtros.dataInicio"></div>
-          <div class="form-group"><label for="dataFim">Data Fim</label><input type="date" id="dataFim" name="dataFim"
-              [(ngModel)]="filtros.dataFim"></div>
-          <div class="form-group"><label for="filtroMotorista">Motorista</label><select id="filtroMotorista"
-              name="filtroMotorista" [(ngModel)]="filtros.motoristaId">
-              <option [ngValue]="null">Todos</option>
-              <option *ngFor="let motorista of motoristas" [value]="motorista.id">{{ motorista.nomeCompleto }}</option>
-            </select></div>
-          <div class="form-group"><label for="filtroStatus">Status</label><select id="filtroStatus" name="filtroStatus"
-              [(ngModel)]="filtros.status">
-              <option [ngValue]="null">Todos</option>
-              <option value="AGENDADO">Agendado</option>
-              <option value="EM_USO">Em Uso</option>
-              <option value="FINALIZADO">Finalizado</option>
-              <option value="CANCELADO">Cancelado</option>
-            </select></div>
-        </div>
-        <div class="filter-actions"><button type="submit" class="btn-primary">Filtrar</button><button type="button"
-            (click)="onLimparFiltros()" class="btn-secondary">Limpar</button></div>
-      </form>
-      <table *ngIf="agendamentos.length > 0" class="data-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Motorista</th>
-            <th>Veículo (Placa)</th>
-            <th>Destino</th>
-            <th>Data/Hora Saída</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let agendamento of agendamentos">
-            <td>{{ agendamento.id }}</td>
-            <td>{{ agendamento.motorista.nome }}</td>
-            <td>{{ agendamento.veiculo.placa }}</td>
-            <td>{{ agendamento.destino }}</td>
-            <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>{{ agendamento.status }}</td>
-            <td><button [routerLink]="['/agendamentos/detalhes', agendamento.id]"
-                class="btn-action btn-secondary">Detalhes</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <p *ngIf="agendamentos.length === 0">Nenhum agendamento encontrado.</p>
-    </section>
-
-    <section class="data-section">
-      <h2>Ocorrências Registradas</h2>
-      <table *ngIf="ocorrencias.length > 0" class="data-table">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Veículo</th>
-            <th>Motorista</th>
-            <th>Descrição</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ocorrencia of ocorrencias">
-            <td>{{ ocorrencia.dataHoraRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>{{ ocorrencia.veiculoPlaca }}</td>
-            <td>{{ ocorrencia.motoristaNome }}</td>
-            <td>{{ ocorrencia.descricao }}</td>
-            <td>{{ ocorrencia.status }}</td>
-            <td>
-              <button *ngIf="ocorrencia.status === 'ABERTA'" (click)="onResolverOcorrencia(ocorrencia.id)"
-                class="btn-action btn-success">Resolver</button>
-              <span *ngIf="ocorrencia.status !== 'ABERTA'">Resolvida</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p *ngIf="ocorrencias.length === 0">Nenhuma ocorrência registrada.</p>
-    </section>
-
-  </div>
 </div>

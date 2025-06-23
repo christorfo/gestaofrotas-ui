@@ -1,0 +1,19 @@
+/* Define um layout de grid para organizar as seções */
+.dashboard-grid {
+    display: grid;
+    /* Cria duas colunas de tamanho igual */
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem; /* Espaço entre as colunas */
+}
+
+/* A seção de agendamentos e ocorrências ocupará a largura total */
+.dashboard-grid .section-full-width {
+    grid-column: 1 / -1; /* Ocupa todas as colunas da primeira à última */
+}
+
+/* Em telas menores (ex: tablets e celulares), tudo vira uma coluna só */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}

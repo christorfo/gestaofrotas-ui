@@ -4,10 +4,21 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
+// --- IMPORTAÇÕES DO ANGULAR MATERIAL ---
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
@@ -25,7 +36,7 @@ export class LoginComponent {
 
   onSubmit() {
     this.errorMessage = null; // Limpa erros antigos
-    
+
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
         // Login bem-sucedido

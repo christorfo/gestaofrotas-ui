@@ -1,9 +1,7 @@
 <div class="dashboard-container">
   <h1>Dashboard do Administrador</h1>
 
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
   <section class="data-section">
     <div class="section-header">
@@ -38,7 +36,7 @@
         </tr>
       </tbody>
     </table>
-    <p *ngIf="!isLoadingVeiculos && veiculos.length === 0">Nenhum veículo encontrado.</p>
+    <p *ngIf="!isLoadingVeiculos && !errorMessage && veiculos.length === 0">Nenhum veículo encontrado.</p>
   </section>
 
   <section class="data-section">
@@ -71,7 +69,7 @@
         </tr>
       </tbody>
     </table>
-    <p *ngIf="!isLoadingMotoristas && motoristas.length === 0">Nenhum motorista encontrado.</p>
+    <p *ngIf="!isLoadingMotoristas && !errorMessage && motoristas.length === 0">Nenhum motorista encontrado.</p>
   </section>
 
   <section class="data-section">
@@ -130,7 +128,7 @@
         </tr>
       </tbody>
     </table>
-    <p *ngIf="!isLoadingAgendamentos && agendamentos.length === 0">Nenhum agendamento encontrado.</p>
+    <p *ngIf="!isLoadingAgendamentos && !errorMessage && agendamentos.length === 0">Nenhum agendamento encontrado.</p>
   </section>
 
   <section class="data-section">
@@ -164,7 +162,7 @@
         </tr>
       </tbody>
     </table>
-    <p *ngIf="!isLoadingOcorrencias && ocorrencias.length === 0">Nenhuma ocorrência registrada.</p>
+    <p *ngIf="!isLoadingOcorrencias && !errorMessage && ocorrencias.length === 0">Nenhuma ocorrência registrada.</p>
   </section>
 
 </div>

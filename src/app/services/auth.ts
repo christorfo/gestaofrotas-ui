@@ -9,6 +9,7 @@ interface JwtResponse {
   token: string;
   type: string;
   email: string;
+  nome: string;
   roles: string[];
 }
 
@@ -31,6 +32,7 @@ export class AuthService {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('userRoles', JSON.stringify(response.roles));
           localStorage.setItem('userEmail', response.email);
+          localStorage.setItem('userName', response.nome);
         }
       })
     );
@@ -41,6 +43,7 @@ export class AuthService {
       localStorage.removeItem('authToken');
       localStorage.removeItem('userRoles');
       localStorage.removeItem('userEmail');
+      localStorage.removeItem('userName');
     }
     this.router.navigate(['/login']);
   }
@@ -73,6 +76,13 @@ export class AuthService {
 
   isMotorista(): boolean {
     return this.getRoles().includes('ROLE_MOTORISTA');
+  }
+
+  getUserName(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('userName');
+    }
+    return null;
   }
 
   getUserEmail(): string | null {

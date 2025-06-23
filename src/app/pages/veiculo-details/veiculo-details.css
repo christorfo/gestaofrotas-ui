@@ -1,0 +1,107 @@
+/* Usamos :host para garantir que os estilos se apliquem apenas a este componente */
+:host {
+    display: block;
+    padding: 2rem;
+}
+
+.details-page-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 1rem;
+}
+
+.details-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.placa-subtitle {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--texto-secundario);
+}
+
+.details-card {
+    background-color: var(--cor-superficie);
+    border-radius: 12px;
+    box-shadow: var(--sombra-padrao);
+    padding: 2rem;
+}
+
+.details-card-section {
+    margin-bottom: 2rem;
+}
+
+.details-card-section:last-child {
+    margin-bottom: 0;
+}
+
+.details-card-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--texto-secundario);
+    margin-bottom: 0.25rem;
+}
+
+.info-item p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Estilos para o "Badge" de Status */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    /* Arredondamento total */
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+.status-disponivel {
+    color: #065f46;
+    background-color: #d1fae5;
+}
+
+.status-manutencao {
+    color: #9a3412;
+    background-color: #ffedd5;
+}
+
+.status-inativo {
+    color: #374151;
+    background-color: #e5e7eb;
+}
+
+/* Adicionando compatibilidade para o spinner */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    min-height: 150px;
+}

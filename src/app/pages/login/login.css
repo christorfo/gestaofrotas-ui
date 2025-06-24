@@ -4,7 +4,6 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  /* Evita barras de rolagem */
 }
 
 /* Lado da Imagem/Branding */
@@ -17,6 +16,8 @@
   align-items: center;
   text-align: center;
   padding: 2rem;
+  /* NOVA ANIMAÇÃO APLICADA */
+  animation: slideInFromLeft 0.7s ease-out forwards;
 }
 
 .branding-content h1 {
@@ -37,34 +38,32 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f3f4f6;
-  /* Fundo um pouco mais escuro que o branco */
+  background-color: var(--cor-fundo);
+  /* NOVA ANIMAÇÃO APLICADA */
+  animation: slideInFromRight 0.7s ease-out forwards;
 }
 
 /* Container do formulário em si */
 .login-container {
-  width: 400px;
-  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 50px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sombra-padrao);
+  text-align: center;
 }
 
 .login-container h2 {
   text-align: center;
   margin-top: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   font-size: 1.8rem;
 }
 
 .form-group {
+  text-align: left;
   margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
 }
 
 button.btn-primary {
@@ -74,15 +73,44 @@ button.btn-primary {
   margin-top: 1rem;
 }
 
-/* Design Responsivo para telas menores */
+/* Design Responsivo */
 @media (max-width: 900px) {
   .branding-side {
     display: none;
-    /* Esconde a parte da imagem em telas menores */
   }
 
   .form-side {
-    flex: auto;
-    /* O formulário ocupa toda a tela */
+    padding: 20px;
+    animation: none;
+    /* Remove a animação em telas pequenas */
+  }
+}
+
+
+/* --- NOVAS REGRAS DE ANIMAÇÃO --- */
+
+/* Animação para o painel esquerdo */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animação para o painel direito */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

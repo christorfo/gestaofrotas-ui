@@ -1,40 +1,37 @@
-/*
- * =========================================
- * TEMA GLOBAL - SISTEMA DE GESTÃO DE FROTAS
- * =========================================
- */
-
-/* Importação de Fonte (Opcional, mas recomendado) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @import 'ngx-toastr/toastr';
 
 /* Variáveis de Cor para fácil manutenção */
 :root {
   --cor-primaria: #4f46e5;
-  /* Um azul/índigo moderno */
   --cor-primaria-hover: #4338ca;
   --cor-secundaria: #6b7280;
-  /* Cinza para botões secundários */
   --cor-secundaria-hover: #4b5563;
   --cor-sucesso: #10b981;
-  /* Verde para sucesso */
+  --cor-sucesso-hover: #059669;
   --cor-aviso: #f59e0b;
-  /* Amarelo/Laranja para aviso */
   --cor-erro: #ef4444;
-  /* Vermelho para erro */
-
   --cor-fundo: #f3f4f6;
-  /* Cinza bem claro para o fundo da página */
   --cor-superficie: #ffffff;
-  /* Branco para cards e containers */
   --cor-borda: #e5e7eb;
-  /* Cinza claro para bordas */
-
   --texto-principal: #111827;
   --texto-secundario: #6b7280;
-
   --sombra-padrao: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* NOVA ADIÇÃO: Sombra mais pronunciada para o efeito de hover */
+  --sombra-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* NOVA ADIÇÃO: Animação de Entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Reset Básico e Padrões do Body */
@@ -54,16 +51,18 @@ h3 {
   font-weight: 600;
 }
 
-/* Layout Principal e Containers */
+/* Layout Principal e Containers com Animação */
 .dashboard-container,
 .details-container,
 .form-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 40px auto;
-  padding: 2rem;
+  padding: 2rem 2.5rem;
   background-color: var(--cor-superficie);
   border-radius: 12px;
   box-shadow: var(--sombra-padrao);
+  animation: fadeInUp 0.4s ease-out forwards;
+  /* NOVA ADIÇÃO: Aplica a animação */
 }
 
 .login-container {
@@ -73,10 +72,10 @@ h3 {
   min-height: 100vh;
 }
 
-/* Estilos de Botões Padrão */
+/* Estilos de Botões Padrão com Transições */
 button,
 .btn {
-  padding: 10px 20px;
+  padding: 10px 18px;
   border: none;
   border-radius: 6px;
   font-size: 15px;
@@ -87,14 +86,23 @@ button,
   align-items: center;
   justify-content: center;
   gap: 8px;
+  white-space: nowrap;
+}
+
+/* NOVA ADIÇÃO: Efeito de hover para todos os botões */
+button:hover:not(:disabled),
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-hover);
 }
 
 button:disabled,
 .btn:disabled {
-  background-color: #9ca3af;
-  color: #e5e7eb;
+  background-color: #9ca3af !important;
+  color: #e5e7eb !important;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .btn-primary {
@@ -121,7 +129,7 @@ button:disabled,
 }
 
 .btn-success:hover:not(:disabled) {
-  background-color: #059669;
+  background-color: var(--cor-sucesso-hover);
 }
 
 .btn-action {
@@ -129,7 +137,47 @@ button:disabled,
   font-size: 14px;
 }
 
-/* Estilos de Formulário */
+/* Estilos de Tabela */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+.data-table th,
+.data-table td {
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 1rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.data-table thead th {
+  color: var(--texto-secundario);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+}
+
+.data-table tbody tr {
+  transition: background-color 0.2s ease;
+  /* NOVA ADIÇÃO: Transição suave no hover */
+}
+
+.data-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* MELHORIA: Estilo para a célula de ações para alinhar os botões */
+.data-table .actions-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  /* Define um espaçamento consistente entre os botões */
+  justify-content: flex-start;
+}
+
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -183,37 +231,6 @@ button:disabled,
   margin-top: 1.5rem;
 }
 
-/* Estilos de Tabela */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
-}
-
-.data-table th,
-.data-table td {
-  border-bottom: 1px solid var(--cor-borda);
-  padding: 1rem;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.data-table thead th {
-  color: var(--texto-secundario);
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.data-table tbody tr:hover {
-  background-color: #f9fafb;
-}
-
-/* Seções e Cabeçalhos */
-.data-section {
-  margin-top: 2.5rem;
-}
-
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -223,7 +240,10 @@ button:disabled,
   margin-bottom: 1.5rem;
 }
 
-/* Outros */
+.data-section {
+  margin-top: 2.5rem;
+}
+
 .error-message {
   color: var(--cor-erro);
   background-color: #fee2e2;
@@ -255,14 +275,6 @@ button:disabled,
   to {
     transform: rotate(360deg);
   }
-}
-
-.data-table .btn-action {
-  margin-right: 8px;
-}
-
-.data-table .btn-action:last-child {
-  margin-right: 0;
 }
 
 .form-actions {

@@ -25,7 +25,7 @@
                     <td>{{ agendamento.veiculo.placa }}</td>
                     <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td>{{ agendamento.status }}</td>
-                    <td>
+                    <td class="actions-cell">
                         <button *ngIf="agendamento.status === 'AGENDADO'" (click)="abrirModal(agendamento, 'iniciar')"
                             class="btn-action btn-success">
                             Iniciar Viagem

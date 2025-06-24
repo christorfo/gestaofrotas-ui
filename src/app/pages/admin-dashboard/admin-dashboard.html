@@ -27,7 +27,7 @@
           <td>{{ veiculo.modelo }}</td>
           <td>{{ veiculo.status }}</td>
           <td>{{ veiculo.quilometragemAtual | number:'1.0-0' }} km</td>
-          <td>
+          <td class="actions-cell">
             <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
               class="btn-action">Editar</button>
             <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id)"
@@ -67,7 +67,7 @@
           <td>{{ motorista.nomeCompleto }}</td>
           <td>{{ motorista.email }}</td>
           <td>{{ motorista.status }}</td>
-          <td>
+          <td class="actions-cell">
             <button [routerLink]="['/admin/motoristas/editar', motorista.id]" class="btn-action">Editar</button>
             <button [routerLink]="['/admin/motoristas/detalhes', motorista.id]"
               class="btn-action btn-secondary">Detalhes</button>
@@ -129,7 +129,7 @@
           <td>{{ agendamento.destino }}</td>
           <td>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ agendamento.status }}</td>
-          <td><button [routerLink]="['/agendamentos/detalhes', agendamento.id]"
+          <td class="actions-cell"><button [routerLink]="['/agendamentos/detalhes', agendamento.id]"
               class="btn-action btn-secondary">Detalhes</button></td>
         </tr>
       </tbody>
@@ -160,7 +160,7 @@
           <td>{{ ocorrencia.motoristaNome }}</td>
           <td>{{ ocorrencia.descricao }}</td>
           <td>{{ ocorrencia.status }}</td>
-          <td>
+          <td class="actions-cell">
             <button *ngIf="ocorrencia.status === 'ABERTA'" (click)="abrirModalResolver(ocorrencia)"
               class="btn-action btn-success">
               Resolver

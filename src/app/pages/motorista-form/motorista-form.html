@@ -114,10 +114,6 @@
             </select>
         </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-        </div>
-
         <div class="form-actions">
             <button type="submit" [disabled]="motoristaForm.invalid" class="btn-primary">Salvar</button>
             <button type="button" routerLink="/admin/dashboard" class="btn-secondary">Cancelar</button>

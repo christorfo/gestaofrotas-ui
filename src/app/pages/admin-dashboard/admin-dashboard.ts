@@ -143,8 +143,13 @@ export class AdminDashboardComponent implements OnInit {
   onResolverOcorrencia(id: number): void {
     if (confirm('Tem certeza que deseja marcar esta ocorrência como resolvida?')) {
       this.ocorrenciaService.resolverOcorrencia(id).subscribe({
-        next: () => this.carregarOcorrencias(),
-        error: (err) => this.errorMessage = `Erro ao resolver ocorrência: ${err.error?.message || 'Tente novamente.'}`
+        next: (ocorrencia) => {
+          this.toastr.success(`Ocorrência para o veículo ${ocorrencia.veiculoPlaca} foi resolvida.`, 'Sucesso');
+          this.carregarOcorrencias();
+        },
+        error: (err) => {
+          this.toastr.error(err.error?.message || 'Não foi possível resolver a ocorrência.', 'Erro');
+        }
       });
     }
   }

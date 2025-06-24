@@ -41,8 +41,8 @@
 
     <div class="form-group">
       <label for="quilometragem">Quilometragem Atual</label>
-      <input type="number" id="quilometragem" name="quilometragem" [(ngModel)]="veiculo.quilometragemAtual" required
-        min="0" #kmInput="ngModel">
+      <input type="text" id="quilometragem" name="quilometragem" [(ngModel)]="veiculo.quilometragemAtual" required
+        min="0" #kmInput="ngModel" mask="0*" pattern="[0-9]*">
       <div *ngIf="kmInput.invalid && (kmInput.dirty || kmInput.touched)" class="error-message">
         <div *ngIf="kmInput.errors?.['required']">A quilometragem é obrigatória.</div>
         <div *ngIf="kmInput.errors?.['min']">A quilometragem não pode ser negativa.</div>
@@ -55,10 +55,6 @@
         <option value="DISPONIVEL">Disponível</option>
         <option value="INATIVO">Inativo</option>
       </select>
-    </div>
-
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
     </div>
 
     <div class="form-actions">

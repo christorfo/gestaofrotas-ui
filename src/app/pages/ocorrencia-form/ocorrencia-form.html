@@ -19,10 +19,6 @@
                 placeholder="Descreva o problema ou comportamento estranho observado..."></textarea>
         </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-        </div>
-
         <div class="form-actions">
             <button type="submit" [disabled]="ocorrenciaForm.invalid || ocorrencia.veiculoId === 0"
                 class="btn-primary">Enviar Relato</button>

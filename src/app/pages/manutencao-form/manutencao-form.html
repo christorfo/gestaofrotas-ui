@@ -33,10 +33,6 @@
             <textarea id="descricao" name="descricao" rows="4" [(ngModel)]="manutencao.descricao" required></textarea>
         </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-        </div>
-
         <div class="form-actions">
             <button type="submit" [disabled]="manutencaoForm.invalid" class="btn-primary">Salvar</button>
             <button type="button" routerLink="/admin/dashboard" class="btn-secondary">Cancelar</button>

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ManutencaoRequest, TipoManutencao } from '../../models/manutencao.model';
 import { ManutencaoService } from '../../services/manutencao';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-manutencao-form',
@@ -16,6 +17,7 @@ export class ManutencaoFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private manutencaoService = inject(ManutencaoService);
+  private toastr = inject(ToastrService);
 
   manutencao: ManutencaoRequest = {
     veiculoId: 0,
@@ -25,7 +27,6 @@ export class ManutencaoFormComponent implements OnInit {
     valor: 0,
     quilometragem: 0
   };
-  errorMessage: string | null = null;
 
   ngOnInit(): void {
     const veiculoId = this.route.snapshot.paramMap.get('veiculoId');
@@ -40,11 +41,14 @@ export class ManutencaoFormComponent implements OnInit {
   onSubmit(): void {
     this.manutencaoService.registrarManutencao(this.manutencao).subscribe({
       next: () => {
-        console.log('Manutenção registrada com sucesso!');
+        // 3. Exibe uma notificação de SUCESSO
+        this.toastr.success('Manutenção registrada com sucesso!');
         this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
-        this.errorMessage = `Erro ao registrar manutenção: ${err.error?.message || 'Verifique os dados.'}`;
+        // 4. Exibe uma notificação de ERRO
+        const errorMessage = err.error?.message || 'Não foi possível salvar o registro. Verifique os dados.';
+        this.toastr.error(errorMessage, 'Erro');
       }
     });
   }

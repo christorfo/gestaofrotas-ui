@@ -1,14 +1,15 @@
 <div class="dashboard-container">
-    <h1>Meus Agendamentos</h1>
-    <button routerLink="/motorista/ocorrencias/nova" class="btn-primary">Relatar Ocorrência</button>
-
+    <div class="section-header">
+        <h1>Meus Agendamentos</h1>
+        <button routerLink="/motorista/ocorrencias/nova" class="btn-primary">Relatar Ocorrência</button>
+    </div>
 
     <section class="data-section">
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
+        <div *ngIf="isLoading" class="spinner-container">
+            <div class="spinner"></div>
         </div>
 
-        <table *ngIf="!errorMessage && agendamentos.length > 0" class="data-table">
+        <table *ngIf="!isLoading && agendamentos.length > 0" class="data-table">
             <thead>
                 <tr>
                     <th>Destino</th>
@@ -42,7 +43,7 @@
             </tbody>
         </table>
 
-        <p *ngIf="!errorMessage && agendamentos.length === 0">
+        <p *ngIf="!isLoading && agendamentos.length === 0">
             Você não tem nenhum agendamento.
         </p>
     </section>
@@ -71,9 +72,6 @@
             <div class="form-group">
                 <label for="observacoes">Observações (opcional)</label>
                 <textarea id="observacoes" name="observacoes" rows="3" [(ngModel)]="dadosAcao.observacoes"></textarea>
-            </div>
-            <div *ngIf="modalErrorMessage" class="error-message">
-                {{ modalErrorMessage }}
             </div>
             <div class="modal-actions">
                 <button type="button" (click)="fecharModal()" class="btn-secondary">Cancelar</button>

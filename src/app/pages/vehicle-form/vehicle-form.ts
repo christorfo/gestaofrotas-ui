@@ -5,6 +5,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { VeiculoService } from '../../services/veiculo';
 import { Veiculo } from '../../models/veiculo.model';
 import { NgxMaskDirective } from 'ngx-mask';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -16,10 +17,10 @@ export class VehicleFormComponent {
   private veiculoService = inject(VeiculoService);
   private router = inject(Router);
   private route = inject(ActivatedRoute); // Injeta a rota ativa para ler parâmetros
-  
+  private toastr = inject(ToastrService);
+
   veiculo: Partial<Veiculo> = {}; // Inicia como objeto vazio
   isEditMode = false;
-  errorMessage: string | null = null;
 
   ngOnInit(): void {
     // Pega o 'id' dos parâmetros da URL
@@ -34,7 +35,6 @@ export class VehicleFormComponent {
           this.veiculo = data; // Preenche o formulário com os dados do veículo
         },
         error: (err) => {
-          this.errorMessage = 'Veículo não encontrado.';
           console.error(err);
         }
       });
@@ -53,18 +53,20 @@ export class VehicleFormComponent {
   }
 
   onSubmit(): void {
-    if (this.isEditMode && this.veiculo.id) {
-      // Lógica de Atualização
-      this.veiculoService.updateVeiculo(this.veiculo.id, this.veiculo as Veiculo).subscribe({
-        next: () => this.router.navigate(['/admin/dashboard']),
-        error: (err) => this.errorMessage = `Erro ao atualizar veículo: ${err.error?.message}`
-      });
-    } else {
-      // Lógica de Criação
-      this.veiculoService.createVeiculo(this.veiculo).subscribe({
-        next: () => this.router.navigate(['/admin/dashboard']),
-        error: (err) => this.errorMessage = `Erro ao criar veículo: ${err.error?.message}`
-      });
-    }
+    const operation = this.isEditMode
+      ? this.veiculoService.updateVeiculo(this.veiculo.id!, this.veiculo as Veiculo)
+      : this.veiculoService.createVeiculo(this.veiculo);
+
+    operation.subscribe({
+      next: () => {
+        const message = this.isEditMode ? 'Veículo atualizado com sucesso!' : 'Veículo criado com sucesso!';
+        this.toastr.success(message, 'Sucesso'); // 4. Usar toast de sucesso
+        this.router.navigate(['/admin/dashboard']);
+      },
+      error: (err) => {
+        // 5. Usar toast de erro
+        this.toastr.error(err.error?.message || 'Não foi possível salvar. Verifique os dados.', 'Erro');
+      }
+    });
   }
 }

@@ -8,6 +8,7 @@ import { MotoristaService } from '../../services/motorista';
 import { Veiculo } from '../../models/veiculo.model';
 import { Motorista } from '../../models/motorista.model';
 import { AgendamentoRequest } from '../../dto/agendamento-request.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-agendamento-form',
@@ -22,11 +23,12 @@ export class AgendamentoFormComponent implements OnInit {
   private veiculoService = inject(VeiculoService);
   private motoristaService = inject(MotoristaService);
   private router = inject(Router);
+  private toastr = inject(ToastrService);
 
   // Propriedades para os dropdowns
   veiculos: Veiculo[] = [];
   motoristas: Motorista[] = [];
-  
+
   // Propriedade para o formulário
   agendamento: AgendamentoRequest = {
     veiculoId: 0,
@@ -35,8 +37,6 @@ export class AgendamentoFormComponent implements OnInit {
     destino: '',
     justificativa: ''
   };
-  
-  errorMessage: string | null = null;
 
   ngOnInit(): void {
     this.carregarVeiculosEMotoristas();
@@ -56,10 +56,12 @@ export class AgendamentoFormComponent implements OnInit {
   onSubmit(): void {
     this.agendamentoService.createAgendamento(this.agendamento).subscribe({
       next: () => {
+        this.toastr.success('Agendamento criado com sucesso!');
         this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
-        this.errorMessage = `Erro ao criar agendamento: ${err.error?.message || 'Verifique os dados.'}`;
+        const errorMessage = err.error?.message || 'Não foi possível salvar o agendamento.';
+        this.toastr.error(errorMessage, 'Erro ao Agendar');
       }
     });
   }

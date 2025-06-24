@@ -45,6 +45,11 @@ export class AdminDashboardComponent implements OnInit {
   // Propriedade para o formulário de filtros de agendamento
   filtros: AgendamentoFiltros = {};
 
+  // Propriedades para as modais de ação
+  isResolverModalAberto = false;
+  ocorrenciaSelecionada: Ocorrencia | null = null;
+  modalErrorMessage: string | null = null;
+
   // Propriedade para mensagens de erro
   errorMessage: string | null = null;
 
@@ -140,17 +145,33 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  onResolverOcorrencia(id: number): void {
-    if (confirm('Tem certeza que deseja marcar esta ocorrência como resolvida?')) {
-      this.ocorrenciaService.resolverOcorrencia(id).subscribe({
-        next: (ocorrencia) => {
-          this.toastr.success(`Ocorrência para o veículo ${ocorrencia.veiculoPlaca} foi resolvida.`, 'Sucesso');
-          this.carregarOcorrencias();
-        },
-        error: (err) => {
-          this.toastr.error(err.error?.message || 'Não foi possível resolver a ocorrência.', 'Erro');
-        }
-      });
-    }
+  // 1. Abre o modal e guarda a ocorrência selecionada
+  abrirModalResolver(ocorrencia: Ocorrencia): void {
+    this.ocorrenciaSelecionada = ocorrencia;
+    this.isResolverModalAberto = true;
+  }
+
+  // 2. Fecha o modal e limpa as variáveis
+  fecharModalResolver(): void {
+    this.isResolverModalAberto = false;
+    this.ocorrenciaSelecionada = null;
+    this.modalErrorMessage = null;
+  }
+
+  // 3. Lógica que antes estava no onResolverOcorrencia
+  confirmarResolucaoOcorrencia(): void {
+    if (!this.ocorrenciaSelecionada) return;
+
+    this.ocorrenciaService.resolverOcorrencia(this.ocorrenciaSelecionada.id).subscribe({
+      next: (ocorrenciaResolvida) => {
+        this.toastr.success(`Ocorrência para o veículo ${ocorrenciaResolvida.veiculoPlaca} foi resolvida.`, 'Sucesso');
+        this.fecharModalResolver();
+        this.carregarOcorrencias(); // Atualiza a lista
+      },
+      error: (err) => {
+        // Exibe o erro dentro do modal
+        this.modalErrorMessage = err.error?.message || 'Não foi possível resolver a ocorrência.';
+      }
+    });
   }
 }

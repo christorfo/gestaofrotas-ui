@@ -1,0 +1,11 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 0;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+}

@@ -66,8 +66,8 @@
         <form #acaoForm="ngForm" (ngSubmit)="confirmarAcao()">
             <div class="form-group">
                 <label for="quilometragem">Quilometragem</label>
-                <input type="number" id="quilometragem" name="quilometragem" [(ngModel)]="dadosAcao.quilometragem"
-                    required>
+                <input type="text" id="quilometragem" name="quilometragem" [(ngModel)]="dadosAcao.quilometragem"
+                    required mask="separator" thousandSeparator=".">
             </div>
             <div class="form-group">
                 <label for="observacoes">Observações (opcional)</label>

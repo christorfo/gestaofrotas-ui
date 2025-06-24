@@ -40,10 +40,6 @@
                 [(ngModel)]="agendamento.justificativa"></textarea>
         </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-        </div>
-
         <div class="form-actions">
             <button type="submit"
                 [disabled]="agendamentoForm.invalid || agendamento.veiculoId === 0 || agendamento.motoristaId === 0"

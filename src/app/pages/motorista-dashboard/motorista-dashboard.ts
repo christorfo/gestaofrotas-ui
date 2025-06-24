@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxMaskDirective } from 'ngx-mask';
 
 import { Agendamento } from '../../models/agendamento.model';
 import { AgendamentoService } from '../../services/agendamento';
@@ -12,7 +13,7 @@ import { FinalizarViagemRequest } from '../../dto/finalizar-viagem-request.model
 @Component({
   selector: 'app-motorista-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, NgxMaskDirective],
   templateUrl: './motorista-dashboard.html',
   styleUrls: ['./motorista-dashboard.css']
 })

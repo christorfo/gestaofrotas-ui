@@ -17,6 +17,7 @@
           <th>Placa</th>
           <th>Modelo</th>
           <th>Status</th>
+          <th>Quilometragem</th>
           <th>Ações</th>
         </tr>
       </thead>
@@ -160,8 +161,10 @@
           <td>{{ ocorrencia.descricao }}</td>
           <td>{{ ocorrencia.status }}</td>
           <td>
-            <button *ngIf="ocorrencia.status === 'ABERTA'" (click)="onResolverOcorrencia(ocorrencia.id)"
-              class="btn-action btn-success">Resolver</button>
+            <button *ngIf="ocorrencia.status === 'ABERTA'" (click)="abrirModalResolver(ocorrencia)"
+              class="btn-action btn-success">
+              Resolver
+            </button>
             <span *ngIf="ocorrencia.status !== 'ABERTA'">Resolvida</span>
           </td>
         </tr>
@@ -170,4 +173,26 @@
     <p *ngIf="!isLoadingOcorrencias && !errorMessage && ocorrencias.length === 0">Nenhuma ocorrência registrada.</p>
   </section>
 
+</div>
+
+<div *ngIf="isResolverModalAberto" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Confirmar Ação</h3>
+
+    <p>Você tem certeza que deseja marcar a seguinte ocorrência como resolvida?</p>
+
+    <div class="modal-info" *ngIf="ocorrenciaSelecionada">
+      <strong>Veículo:</strong> {{ ocorrenciaSelecionada.veiculoPlaca }} <br>
+      <strong>Descrição:</strong> "{{ ocorrenciaSelecionada.descricao }}"
+    </div>
+
+    <div *ngIf="modalErrorMessage" class="error-message">
+      {{ modalErrorMessage }}
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" (click)="fecharModalResolver()" class="btn-secondary">Cancelar</button>
+      <button type="button" (click)="confirmarResolucaoOcorrencia()" class="btn-primary">Confirmar e Resolver</button>
+    </div>
+  </div>
 </div>

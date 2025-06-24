@@ -10,7 +10,7 @@ import { FormatTelefonePipe } from '../../pipes/format-telefone-pipe';
 @Component({
   selector: 'app-motorista-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe, FormatCpfPipe, FormatTelefonePipe], 
+  imports: [CommonModule, DatePipe, FormatCpfPipe, FormatTelefonePipe], 
   templateUrl: './motorista-details.html',
   styleUrls: ['./motorista-details.css']
 })

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 // Importação de todos os modelos e serviços necessários
 import { Veiculo } from '../../models/veiculo.model';
@@ -27,6 +28,7 @@ export class AdminDashboardComponent implements OnInit {
   private agendamentoService = inject(AgendamentoService);
   private ocorrenciaService = inject(OcorrenciaService);
   private cdr = inject(ChangeDetectorRef); // Injetando o Change Detector
+  private toastr = inject(ToastrService); // Injetando o Toastr Service
 
   // Propriedades para armazenar os dados das listas
   veiculos: Veiculo[] = [];
@@ -125,8 +127,15 @@ export class AdminDashboardComponent implements OnInit {
   onLiberarVeiculo(id: number): void {
     if (confirm('Tem certeza que deseja liberar este veículo da manutenção?')) {
       this.veiculoService.liberarVeiculo(id).subscribe({
-        next: () => this.carregarVeiculos(),
-        error: (err) => this.errorMessage = `Erro ao liberar veículo: ${err.error?.message || 'Tente novamente.'}`
+        next: (veiculoAtualizado) => {
+          // 3. Notificação de SUCESSO
+          this.toastr.success(`Veículo ${veiculoAtualizado.placa} liberado com sucesso!`);
+          this.carregarVeiculos(); // Atualiza a lista
+        },
+        error: (err) => {
+          // 4. Notificação de ERRO
+          this.toastr.error(err.error?.message || 'Não foi possível liberar o veículo.', 'Erro');
+        }
       });
     }
   }

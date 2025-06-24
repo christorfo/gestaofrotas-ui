@@ -13,6 +13,7 @@ import { VeiculoManutencoesComponent } from './pages/veiculo-manutencoes/veiculo
 import { OcorrenciaFormComponent } from './pages/ocorrencia-form/ocorrencia-form';
 import { VeiculoDetailsComponent } from './pages/veiculo-details/veiculo-details';
 import { MotoristaDetailsComponent } from './pages/motorista-details/motorista-details';
+import { AbastecimentoFormComponent } from './pages/abastecimento-form/abastecimento-form';
 
 export const routes: Routes = [
   // Rota pública
@@ -83,6 +84,11 @@ export const routes: Routes = [
   {
     path: 'admin/motoristas/detalhes/:id',
     component: MotoristaDetailsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/abastecimentos/novo/:veiculoId',
+    component: AbastecimentoFormComponent,
     canActivate: [authGuard]
   },
 

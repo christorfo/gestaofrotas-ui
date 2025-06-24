@@ -30,6 +30,10 @@
               class="btn-action">Editar</button>
             <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id)"
               class="btn-action btn-success">Liberar</button>
+            <button *ngIf="veiculo.status !== 'INATIVO'" [routerLink]="['/admin/abastecimentos/novo', veiculo.id]"
+              class="btn-action btn-warning">
+              Abastecer
+            </button>
             <button [routerLink]="['/admin/veiculos/detalhes', veiculo.id]"
               class="btn-action btn-secondary">Detalhes</button>
           </td>

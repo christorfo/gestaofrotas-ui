@@ -25,6 +25,7 @@
           <td>{{ veiculo.placa }}</td>
           <td>{{ veiculo.modelo }}</td>
           <td>{{ veiculo.status }}</td>
+          <td>{{ veiculo.quilometragemAtual | number:'1.0-0' }} km</td>
           <td>
             <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
               class="btn-action">Editar</button>

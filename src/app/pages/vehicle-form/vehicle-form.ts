@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { VeiculoService } from '../../services/veiculo';
 import { Veiculo } from '../../models/veiculo.model';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-vehicle-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, NgxMaskDirective],
   templateUrl: './vehicle-form.html',
 })
 export class VehicleFormComponent {

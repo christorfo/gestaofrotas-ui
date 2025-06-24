@@ -1,28 +1,65 @@
-<div class="details-container">
-    <ng-container *ngIf="motorista; else loadingOrError">
-        <h1>Detalhes do Motorista: {{ motorista.nomeCompleto }}</h1>
-        <div class="details-grid">
-            <div class="detail-item"><strong>ID:</strong><span>{{ motorista.id }}</span></div>
-            <div class="detail-item"><strong>Nome:</strong><span>{{ motorista.nomeCompleto }}</span></div>
-            <div class="detail-item"><strong>Email:</strong><span>{{ motorista.email }}</span></div>
-            <div class="detail-item"><strong>CPF:</strong><span>{{ motorista.cpf }}</span></div>
-            <div class="detail-item"><strong>Telefone:</strong><span>{{ motorista.telefone }}</span></div>
-            <div class="detail-item"><strong>CNH:</strong><span>{{ motorista.cnhNumero }}</span></div>
-            <div class="detail-item"><strong>Validade CNH:</strong><span>{{ motorista.cnhValidade | date:'dd/MM/yyyy'
-                    }}</span></div>
-            <div class="detail-item"><strong>Status:</strong><span>{{ motorista.status }}</span></div>
-            <div class="detail-item detail-full-width"><strong>Endereço:</strong><span>{{ motorista.endereco }}</span>
+<div class="details-page-container">
+    <div *ngIf="isLoading" class="spinner-container">
+        <div class="spinner"></div>
+    </div>
+    <div *ngIf="errorMessage && !isLoading" class="error-message">{{ errorMessage }}</div>
+
+    <ng-container *ngIf="motorista && !isLoading">
+        <div class="details-header">
+            <div>
+                <h1>{{ motorista.nomeCompleto }}</h1>
+                <p class="subtitle">{{ motorista.email }}</p>
+            </div>
+            <div class="header-actions">
+                <button (click)="location.back()" class="btn-secondary">Voltar</button>
             </div>
         </div>
-        <div class="actions">
-            <button (click)="location.back()" class="btn-secondary">Voltar</button>
+
+        <div class="details-card">
+            <div class="details-card-section">
+                <h3>Documentação</h3>
+                <div class="info-grid">
+                    <div class="info-item"><label>ID:</label>
+                        <p>{{ motorista.id }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>CPF:</label>
+                        <p>{{ motorista.cpf | formatCpf }}</p>
+                    </div>
+                    <div class="info-item"><label>CNH:</label>
+                        <p>{{ motorista.cnhNumero }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Validade da CNH:</label>
+                        <p>{{ motorista.cnhValidade | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-card-section">
+                <h3>Contato e Status</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Telefone:</label>
+                        <p>{{ motorista.telefone | formatTelefone }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Status:</label>
+                        <p>
+                            <span class="status-badge" [ngClass]="getStatusClass(motorista.status)">
+                                {{ motorista.status }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-card-section">
+                <h3>Endereço</h3>
+                <div class="info-item">
+                    <p>{{ motorista.endereco || 'Endereço não cadastrado' }}</p>
+                </div>
+            </div>
         </div>
     </ng-container>
-
-    <ng-template #loadingOrError>
-        <p *ngIf="errorMessage; else loading">{{ errorMessage }}</p>
-        <ng-template #loading>
-            <p>Carregando detalhes...</p>
-        </ng-template>
-    </ng-template>
 </div>

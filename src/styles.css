@@ -254,3 +254,18 @@ button:disabled,
     transform: rotate(360deg);
   }
 }
+
+.data-table .btn-action {
+  margin-right: 8px;
+}
+
+.data-table .btn-action:last-child {
+  margin-right: 0;
+}
+
+.form-actions {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

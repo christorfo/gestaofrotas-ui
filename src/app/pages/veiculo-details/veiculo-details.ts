@@ -7,7 +7,7 @@ import { VeiculoService } from '../../services/veiculo';
 @Component({
   selector: 'app-veiculo-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './veiculo-details.html',
   styleUrls: ['./veiculo-details.css']
 })

@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { NgxMaskDirective } from 'ngx-mask';
+
 import { VeiculoService } from '../../services/veiculo';
 import { Veiculo } from '../../models/veiculo.model';
-import { NgxMaskDirective } from 'ngx-mask';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -13,59 +14,70 @@ import { ToastrService } from 'ngx-toastr';
   imports: [CommonModule, FormsModule, RouterLink, NgxMaskDirective],
   templateUrl: './vehicle-form.html',
 })
-export class VehicleFormComponent {
+export class VehicleFormComponent implements OnInit {
   private veiculoService = inject(VeiculoService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute); // Injeta a rota ativa para ler parâmetros
+  private route = inject(ActivatedRoute);
   private toastr = inject(ToastrService);
 
-  veiculo: Partial<Veiculo> = {}; // Inicia como objeto vazio
+  // O nosso modelo de dados principal.
+  veiculo: Partial<Veiculo> = {};
+
+  // --- PROPRIEDADES INTERMEDIÁRIAS PARA O FORMULÁRIO ---
+  // Estas propriedades serão do tipo 'string' para serem compatíveis com a máscara.
+  formAno: string = '';
+  formQuilometragem: string = '';
+
   isEditMode = false;
 
   ngOnInit(): void {
-    // Pega o 'id' dos parâmetros da URL
     const veiculoId = this.route.snapshot.paramMap.get('id');
-
     if (veiculoId) {
-      // Se existe um ID, estamos em modo de edição
+      // MODO DE EDIÇÃO
       this.isEditMode = true;
-      const id = Number(veiculoId);
-      this.veiculoService.getVeiculoById(id).subscribe({
+      this.veiculoService.getVeiculoById(Number(veiculoId)).subscribe({
         next: (data) => {
-          this.veiculo = data; // Preenche o formulário com os dados do veículo
+          this.veiculo = data;
+          // Preenche as propriedades do formulário convertendo para string
+          this.formAno = data.ano ? data.ano.toString() : '';
+          this.formQuilometragem = data.quilometragemAtual ? data.quilometragemAtual.toString() : '';
         },
         error: (err) => {
-          console.error(err);
+          this.toastr.error('Veículo não encontrado.', 'Erro');
+          this.router.navigate(['/admin/dashboard']);
         }
       });
     } else {
-      // Se não existe um ID, estamos em modo de criação
+      // MODO DE CRIAÇÃO
       this.isEditMode = false;
-      this.veiculo = { // Preenche com valores padrão para um novo veículo
-        placa: '',
-        modelo: '',
-        tipo: '',
-        ano: undefined,
-        quilometragemAtual: undefined,
+      this.veiculo = {
         status: 'DISPONIVEL'
       };
     }
   }
 
   onSubmit(): void {
+    // Antes de salvar, convertemos os valores do formulário (string) de volta para número
+    // e os colocamos no nosso objeto de dados principal.
+    const payload: Partial<Veiculo> = {
+      ...this.veiculo,
+      ano: Number(this.formAno),
+      // Remove os pontos da máscara antes de converter
+      quilometragemAtual: Number(this.formQuilometragem.replace(/\./g, ''))
+    };
+
     const operation = this.isEditMode
-      ? this.veiculoService.updateVeiculo(this.veiculo.id!, this.veiculo as Veiculo)
-      : this.veiculoService.createVeiculo(this.veiculo);
+      ? this.veiculoService.updateVeiculo(this.veiculo.id!, payload as Veiculo)
+      : this.veiculoService.createVeiculo(payload);
 
     operation.subscribe({
       next: () => {
         const message = this.isEditMode ? 'Veículo atualizado com sucesso!' : 'Veículo criado com sucesso!';
-        this.toastr.success(message, 'Sucesso'); // 4. Usar toast de sucesso
+        this.toastr.success(message, 'Sucesso');
         this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
-        // 5. Usar toast de erro
-        this.toastr.error(err.error?.message || 'Não foi possível salvar. Verifique os dados.', 'Erro');
+        this.toastr.error(err.error?.message || 'Não foi possível salvar.', 'Erro ao Salvar');
       }
     });
   }

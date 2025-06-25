@@ -35,7 +35,7 @@
 
     <div class="form-group">
       <label for="ano">Ano</label>
-      <input type="text" id="ano" name="ano" [(ngModel)]="veiculo.ano" required minlength="4" maxlength="4"
+      <input type="text" id="ano" name="ano" [(ngModel)]="formAno" required minlength="4" maxlength="4"
         #anoInput="ngModel" mask="0000">
       <div *ngIf="anoInput.invalid && (anoInput.dirty || anoInput.touched)" class="error-message">
         <div *ngIf="anoInput.errors?.['required']">O ano é obrigatório.</div>
@@ -45,7 +45,7 @@
 
     <div class="form-group">
       <label for="quilometragem">Quilometragem Atual</label>
-      <input type="text" id="quilometragem" name="quilometragem" [(ngModel)]="veiculo.quilometragemAtual" required
+      <input type="text" id="quilometragem" name="quilometragem" [(ngModel)]="formQuilometragem" required
         #kmInput="ngModel" mask="separator" thousandSeparator=".">
       <div *ngIf="kmInput.invalid && (kmInput.dirty || kmInput.touched)" class="error-message">
         <div *ngIf="kmInput.errors?.['required']">A quilometragem é obrigatória.</div>

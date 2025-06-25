@@ -1,116 +1,195 @@
-/* Estrutura principal da página dividida */
-.login-page-wrapper {
-  display: flex;
-  width: 100vw;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:host {
+  display: block;
+  width: 100%;
   height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #292645;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
   overflow: hidden;
 }
 
-/* Lado da Imagem/Branding */
-.branding-side {
-  flex: 1;
-  background: linear-gradient(to right, #4f46e5, #6366f1);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
-  /* NOVA ANIMAÇÃO APLICADA */
-  animation: slideInFromLeft 0.7s ease-out forwards;
+.shape {
+  position: absolute;
+  background-color: #353255;
+  border-radius: 45%;
+  opacity: 0.5;
 }
 
-.branding-content h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 1rem;
+.shape-1 {
+  width: 250px;
+  height: 250px;
+  top: -50px;
+  left: -80px;
 }
 
-.branding-content p {
-  font-size: 1.1rem;
-  opacity: 0.8;
+.shape-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -60px;
+  right: -70px;
 }
 
-/* Lado do Formulário */
-.form-side {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--cor-fundo);
-  /* NOVA ANIMAÇÃO APLICADA */
-  animation: slideInFromRight 0.7s ease-out forwards;
+.shape-3 {
+  width: 150px;
+  height: 150px;
+  bottom: 150px;
+  left: 100px;
+  opacity: 0.3;
 }
 
-/* Container do formulário em si */
-.login-container {
+.shape-4 {
+  width: 100px;
+  height: 100px;
+  top: 120px;
+  right: 150px;
+  opacity: 0.2;
+}
+
+.login-form {
+  background-color: #353255;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 400px;
-  padding: 40px 50px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: var(--sombra-padrao);
   text-align: center;
+  z-index: 1;
 }
 
-.login-container h2 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 2.5rem;
-  font-size: 1.8rem;
+.logo {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
 }
 
-.form-group {
+.logo sup {
+  font-size: 14px;
+  font-weight: 400;
+  top: -1em;
+}
+
+.input-group {
+  margin-bottom: 25px;
   text-align: left;
-  margin-bottom: 1.5rem;
 }
 
-button.btn-primary {
+.input-group label {
+  display: block;
+  color: #a09ed9;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.input-group input {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
+  background-color: #292645;
+  border: 1px solid #4a476b;
+  border-radius: 10px;
+  color: #ffffff;
   font-size: 16px;
-  margin-top: 1rem;
+  box-sizing: border-box;
 }
 
-/* Design Responsivo */
-@media (max-width: 900px) {
-  .branding-side {
-    display: none;
-  }
-
-  .form-side {
-    padding: 20px;
-    animation: none;
-    /* Remove a animação em telas pequenas */
-  }
+.input-group input:focus {
+  outline: none;
+  border-color: #a09ed9;
 }
 
+.login-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #ffffff;
+  color: #292645;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
 
-/* --- NOVAS REGRAS DE ANIMAÇÃO --- */
+.login-button:hover {
+  background-color: #f0f0f0;
+}
 
-/* Animação para o painel esquerdo */
-@keyframes slideInFromLeft {
+.forgot-password:hover {
+  color: #ffffff;
+}
+
+@keyframes popIn {
   from {
-    transform: translateX(-100%);
     opacity: 0;
+    transform: scale(0.9);
   }
 
   to {
-    transform: translateX(0);
     opacity: 1;
+    transform: scale(1);
   }
 }
 
-/* Animação para o painel direito */
-@keyframes slideInFromRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
+.login-form {
+  animation: popIn 0.6s ease-out forwards;
+}
 
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.error-message {
+  color: #ff7b7b;
+  font-size: 12px;
+  padding-top: 5px;
+  text-align: left;
+}
+
+.login-button .button-icon {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #292645;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.login-button .button-icon::after {
+  content: '→';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.login-button:hover:not(:disabled) .button-icon {
+  transform: translateX(5px);
+}
+
+.login-button:disabled {
+  background-color: #4a476b;
+  cursor: not-allowed;
+}
+
+.login-button:disabled:hover .button-icon::after {
+  font-size: 12px;
+  transform: translate(-50%, -50%);
 }

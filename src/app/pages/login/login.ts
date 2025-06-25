@@ -3,12 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
-
-// --- IMPORTAÇÕES DO ANGULAR MATERIAL ---
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -23,20 +22,16 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  // Injetar dependências de forma moderna
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toastr = inject(ToastrService);
 
   credentials = {
     email: '',
     senha: ''
   };
 
-  errorMessage: string | null = null;
-
   onSubmit() {
-    this.errorMessage = null; // Limpa erros antigos
-
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
         // Login bem-sucedido
@@ -53,9 +48,8 @@ export class LoginComponent {
         }
       },
       error: (err) => {
-        // Falha no login
+        this.toastr.error('E-mail ou senha inválidos. Tente novamente.', 'Falha na Autenticação');
         console.error('Erro no login:', err);
-        this.errorMessage = 'E-mail ou senha inválidos. Tente novamente.';
       }
     });
   }

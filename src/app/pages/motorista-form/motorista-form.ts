@@ -40,7 +40,6 @@ export class MotoristaFormComponent implements OnInit {
 
     const motoristaId = this.route.snapshot.paramMap.get('id');
     if (motoristaId) {
-      // MODO DE EDIÇÃO
       this.isEditMode = true;
       this.motoristaService.getMotoristaById(Number(motoristaId)).subscribe(data => {
         // Formata a data de validade para o input
@@ -49,14 +48,12 @@ export class MotoristaFormComponent implements OnInit {
         }
         this.motorista = data;
 
-        // --- CORREÇÃO APLICADA AQUI ---
         // Se o motorista carregado tiver um CEP, chama a função de busca de endereço
         if (this.motorista.cep) {
           this.onCepBlur();
         }
       });
     } else {
-      // MODO DE CRIAÇÃO
       this.isEditMode = false;
       this.motorista = { semNumero: false, status: 'ATIVO' };
     }
@@ -108,12 +105,31 @@ export class MotoristaFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // ... validações de frontend (nome, data) ...
-    // ...
-    const payload: Partial<Motorista> = { ...this.motorista };
+    // Validação 1: Garante que o nome não contém apenas espaços
+    if (this.motorista.nomeCompleto && this.motorista.nomeCompleto.trim() === '') {
+      this.toastr.error('O campo Nome Completo não pode conter apenas espaços.', 'Erro de Validação');
+      return; // Interrompe a submissão
+    }
 
-    // Monta a string de endereço completo antes de enviar
-    payload.endereco = `${payload.logradouro || ''}, ${payload.numero || ''} - ${payload.bairro || ''}, ${payload.localidade || ''}/${payload.uf || ''}`;
+    // Validação 2: Garante que a data de validade da CNH não está no passado
+    if (this.motorista.cnhValidade) {
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0); // Zera a hora para comparar apenas a data
+      const dataValidade = new Date(this.motorista.cnhValidade + 'T00:00:00');
+
+      if (dataValidade < hoje) {
+        this.toastr.error('A data de validade da CNH não pode ser uma data passada.', 'Erro de Validação');
+        return; // Interrompe a submissão
+      }
+    }
+
+    // Monta a string de endereço completo
+    const enderecoCompleto = `${this.motorista.logradouro || ''}, ${this.motorista.numero || ''} - ${this.motorista.bairro || ''}, ${this.motorista.localidade || ''}/${this.motorista.uf || ''}`;
+
+    const payload: Partial<Motorista> = {
+      ...this.motorista,
+      endereco: enderecoCompleto,
+    };
 
     // Remove campos que são apenas para a UI
     delete payload.logradouro;
@@ -123,6 +139,7 @@ export class MotoristaFormComponent implements OnInit {
     delete payload.numero;
     delete payload.semNumero;
 
+    // Lógica de senha
     if (this.novaSenha) {
       payload.senha = this.novaSenha;
     } else {

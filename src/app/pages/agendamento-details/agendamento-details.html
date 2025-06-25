@@ -31,6 +31,12 @@
           <div class="info-item"><label>Saída Agendada:</label>
             <p>{{ agendamento.dataHoraSaida | date:'dd/MM/yyyy HH:mm' }}</p>
           </div>
+          <div *ngIf="agendamento.justificativa" class="details-card-section">
+            <h3>Justificativa</h3>
+            <div class="info-item-full-width">
+              <p>{{ agendamento.justificativa }}</p>
+            </div>
+          </div>
         </div>
       </div>
 

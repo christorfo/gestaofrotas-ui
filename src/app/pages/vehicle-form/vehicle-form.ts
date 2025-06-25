@@ -23,24 +23,24 @@ export class VehicleFormComponent implements OnInit {
   // O nosso modelo de dados principal.
   veiculo: Partial<Veiculo> = {};
 
-  // --- PROPRIEDADES INTERMEDIÁRIAS PARA O FORMULÁRIO ---
-  // Estas propriedades serão do tipo 'string' para serem compatíveis com a máscara.
-  formAno: string = '';
-  formQuilometragem: string = '';
+  // Estas propriedades serão do tipo 'string | null' para serem compatíveis com a máscara.
+  formAno: string | null = null;
+  formQuilometragem: string | null = null;
 
   isEditMode = false;
 
   ngOnInit(): void {
     const veiculoId = this.route.snapshot.paramMap.get('id');
+
     if (veiculoId) {
       // MODO DE EDIÇÃO
       this.isEditMode = true;
       this.veiculoService.getVeiculoById(Number(veiculoId)).subscribe({
         next: (data) => {
           this.veiculo = data;
-          // Preenche as propriedades do formulário convertendo para string
-          this.formAno = data.ano ? data.ano.toString() : '';
-          this.formQuilometragem = data.quilometragemAtual ? data.quilometragemAtual.toString() : '';
+          // Preenche as propriedades do formulário convertendo os números para string
+          this.formAno = data.ano ? data.ano.toString() : null;
+          this.formQuilometragem = data.quilometragemAtual ? data.quilometragemAtual.toString() : null;
         },
         error: (err) => {
           this.toastr.error('Veículo não encontrado.', 'Erro');
@@ -51,19 +51,24 @@ export class VehicleFormComponent implements OnInit {
       // MODO DE CRIAÇÃO
       this.isEditMode = false;
       this.veiculo = {
+        placa: '',
+        modelo: '',
+        tipo: '',
         status: 'DISPONIVEL'
       };
+      this.formAno = null;
+      this.formQuilometragem = null;
     }
   }
 
   onSubmit(): void {
-    // Antes de salvar, convertemos os valores do formulário (string) de volta para número
-    // e os colocamos no nosso objeto de dados principal.
+    // Cria um payload para enviar para a API
     const payload: Partial<Veiculo> = {
       ...this.veiculo,
+      // Converte os valores do formulário (string) de volta para número
       ano: Number(this.formAno),
-      // Remove os pontos da máscara antes de converter
-      quilometragemAtual: Number(this.formQuilometragem.replace(/\./g, ''))
+      // Remove os pontos da máscara (ex: "15.500" vira 15500) antes de converter
+      quilometragemAtual: Number(String(this.formQuilometragem || '0').replace(/\./g, ''))
     };
 
     const operation = this.isEditMode
@@ -77,7 +82,7 @@ export class VehicleFormComponent implements OnInit {
         this.router.navigate(['/admin/dashboard']);
       },
       error: (err) => {
-        this.toastr.error(err.error?.message || 'Não foi possível salvar.', 'Erro ao Salvar');
+        this.toastr.error(err.error?.message || 'Não foi possível salvar. Verifique os dados.', 'Erro ao Salvar');
       }
     });
   }

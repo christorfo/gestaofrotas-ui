@@ -3,6 +3,12 @@
 
     <form (ngSubmit)="onSubmit()" #agendamentoForm="ngForm">
 
+        <!-- Bloco de Alerta para Erros -->
+        <div *ngIf="formError" class="alert alert-danger">
+            <i class="fas fa-times-circle"></i> <!-- Ícone de erro -->
+            {{ formError }}
+        </div>
+
         <div class="form-group">
             <label for="motorista">Motorista</label>
             <select id="motorista" name="motorista" [(ngModel)]="agendamento.motoristaId" required>

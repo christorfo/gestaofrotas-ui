@@ -1,26 +1,69 @@
-/* Define um layout de grid para organizar as seções */
+/* --- ESTILOS PARA AS ABAS --- */
+.tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que as abas quebrem a linha em telas menores */
+    gap: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+    /* Cor de borda mais suave */
+    margin-bottom: 1.5rem;
+}
+
+.tab-nav button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* Espaço entre o ícone e o texto */
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    /* Alinha o botão com a borda inferior do container */
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    /* Cor de texto mais suave para abas inativas */
+    transition: all 0.2s ease-in-out;
+}
+
+.tab-nav button:hover {
+    background-color: #f9fafb;
+    /* Fundo suave ao passar o mouse */
+    color: #1f2937;
+    /* Cor de texto mais escura ao passar o mouse */
+}
+
+.tab-nav button.active {
+    /* Use a sua variável de cor primária, com um fallback */
+    border-bottom-color: var(--cor-primaria, #4f46e5);
+    color: var(--cor-primaria, #4f46e5);
+    font-weight: 600;
+}
+
+.tab-content {
+    margin-top: 1rem;
+}
+
+/* --- ESTILOS ORIGINAIS (mantidos) --- */
+
 .dashboard-grid {
     display: grid;
-    /* Cria duas colunas de tamanho igual */
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
-    /* Espaço entre as colunas */
 }
 
-/* A seção de agendamentos e ocorrências ocupará a largura total */
 .dashboard-grid .section-full-width {
     grid-column: 1 / -1;
-    /* Ocupa todas as colunas da primeira à última */
 }
 
-/* Em telas menores (ex: tablets e celulares), tudo vira uma coluna só */
 @media (max-width: 1024px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* Estilos para o Modal (pode copiar de outros componentes) */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -49,7 +92,7 @@
 
 .modal-info {
     background-color: #f3f4f6;
-    border-left: 4px solid var(--cor-primaria);
+    border-left: 4px solid var(--cor-primaria, #4f46e5);
     padding: 1rem;
     margin: 1.5rem 0;
     border-radius: 4px;

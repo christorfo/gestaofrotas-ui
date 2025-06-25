@@ -9,6 +9,7 @@ import { Veiculo } from '../../models/veiculo.model';
 import { Motorista } from '../../models/motorista.model';
 import { AgendamentoRequest } from '../../dto/agendamento-request.model';
 import { ToastrService } from 'ngx-toastr';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-agendamento-form',
@@ -38,6 +39,9 @@ export class AgendamentoFormComponent implements OnInit {
     justificativa: ''
   };
 
+  // Propriedade para controlar a mensagem de erro no formulário
+  formError: string | null = null;
+
   ngOnInit(): void {
     this.carregarVeiculosEMotoristas();
   }
@@ -54,14 +58,31 @@ export class AgendamentoFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Limpa erros anteriores antes de uma nova submissão
+    this.formError = null;
+
     this.agendamentoService.createAgendamento(this.agendamento).subscribe({
       next: () => {
         this.toastr.success('Agendamento criado com sucesso!');
         this.router.navigate(['/admin/dashboard']);
       },
-      error: (err) => {
-        const errorMessage = err.error?.message || 'Não foi possível salvar o agendamento.';
-        this.toastr.error(errorMessage, 'Erro ao Agendar');
+      error: (err: HttpErrorResponse) => {
+        // A resposta de erro do servidor é texto simples, o que causa um erro de análise no Angular
+        // quando ele espera um JSON. A lógica abaixo tenta extrair a mensagem de texto.
+        if (err.status === 400 && err.error && typeof err.error === 'string') {
+          // Caso 1: O corpo do erro é a string de texto (cenário ideal).
+          this.formError = err.error;
+        } else if (err.status === 400) {
+          // Caso 2: Ocorreu um erro de análise. Mostramos uma mensagem amigável e genérica
+          // para esse tipo de conflito, em vez do erro técnico.
+          this.formError = 'O veículo ou motorista não está disponível ou já existe um agendamento neste horário.';
+
+          // É útil para o desenvolvedor ver o erro real no console para depuração.
+          console.error('Erro de agendamento recebido do servidor:', err);
+        } else {
+          // Para todos os outros erros (ex: erro de servidor 500), usamos o toastr.
+          this.toastr.error('Ocorreu um erro inesperado. Tente novamente mais tarde.', 'Erro');
+        }
       }
     });
   }

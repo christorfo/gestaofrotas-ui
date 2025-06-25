@@ -28,9 +28,12 @@ export class AdminDashboardComponent implements OnInit {
   private motoristaService = inject(MotoristaService);
   private agendamentoService = inject(AgendamentoService);
   private ocorrenciaService = inject(OcorrenciaService);
-  private cdr = inject(ChangeDetectorRef); // Injetando o Change Detector
-  private toastr = inject(ToastrService); // Injetando o Toastr Service
+  private cdr = inject(ChangeDetectorRef);
+  private toastr = inject(ToastrService);
   private confirmationService = inject(ConfirmationService);
+
+  // Propriedade para controlar a aba ativa. 'veiculos' é a aba padrão.
+  public activeTab: string = 'veiculos';
 
   // Propriedades para armazenar os dados das listas
   veiculos: Veiculo[] = [];
@@ -56,19 +59,27 @@ export class AdminDashboardComponent implements OnInit {
   errorMessage: string | null = null;
 
   ngOnInit(): void {
+    // Carrega os dados de todas as seções ao iniciar o componente
+    // Uma otimização futura poderia ser carregar os dados apenas quando a aba for clicada
     this.carregarVeiculos();
     this.carregarMotoristas();
     this.carregarAgendamentos();
     this.carregarOcorrencias();
   }
 
+  // --- CONTROLE DAS ABAS ---
+  selectTab(tabName: string): void {
+    this.activeTab = tabName;
+  }
+
+  // --- MÉTODOS DE CARREGAMENTO DE DADOS (sem alterações) ---
   carregarVeiculos(): void {
     this.isLoadingVeiculos = true;
     this.veiculoService.getVeiculos().subscribe({
       next: (data) => {
         this.veiculos = data;
         this.isLoadingVeiculos = false;
-        this.cdr.detectChanges(); // Força a atualização da tela
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Falha ao carregar a lista de veículos.';
@@ -83,7 +94,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (data) => {
         this.motoristas = data;
         this.isLoadingMotoristas = false;
-        this.cdr.detectChanges(); // Força a atualização da tela
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Falha ao carregar a lista de motoristas.';
@@ -98,7 +109,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (data) => {
         this.agendamentos = data;
         this.isLoadingAgendamentos = false;
-        this.cdr.detectChanges(); // Força a atualização da tela
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Falha ao carregar a lista de agendamentos.';
@@ -113,7 +124,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (data) => {
         this.ocorrencias = data;
         this.isLoadingOcorrencias = false;
-        this.cdr.detectChanges(); // Força a atualização da tela
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Falha ao carregar a lista de ocorrências.';
@@ -122,6 +133,7 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  // --- MÉTODOS DE AÇÕES E FILTROS (sem alterações) ---
   onFiltrar(): void {
     this.carregarAgendamentos();
   }
@@ -133,10 +145,7 @@ export class AdminDashboardComponent implements OnInit {
 
   onLiberarVeiculo(id: number, placa: string): void {
     const message = `Tem certeza que deseja liberar o veículo de placa ${placa} da manutenção?`;
-
-    // Usa o serviço de confirmação em vez do 'confirm()' do navegador
     this.confirmationService.open(message, () => {
-      // Esta função (callback) só é executada se o usuário clicar em "Confirmar" no modal
       this.veiculoService.liberarVeiculo(id).subscribe({
         next: (veiculoAtualizado) => {
           this.toastr.success(`Veículo ${veiculoAtualizado.placa} liberado com sucesso!`, 'Sucesso');
@@ -149,20 +158,18 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  // 1. Abre o modal e guarda a ocorrência selecionada
+  // --- MÉTODOS DO MODAL (sem alterações) ---
   abrirModalResolver(ocorrencia: Ocorrencia): void {
     this.ocorrenciaSelecionada = ocorrencia;
     this.isResolverModalAberto = true;
   }
 
-  // 2. Fecha o modal e limpa as variáveis
   fecharModalResolver(): void {
     this.isResolverModalAberto = false;
     this.ocorrenciaSelecionada = null;
     this.modalErrorMessage = null;
   }
 
-  // 3. Lógica que antes estava no onResolverOcorrencia
   confirmarResolucaoOcorrencia(): void {
     if (!this.ocorrenciaSelecionada) return;
 
@@ -170,10 +177,9 @@ export class AdminDashboardComponent implements OnInit {
       next: (ocorrenciaResolvida) => {
         this.toastr.success(`Ocorrência para o veículo ${ocorrenciaResolvida.veiculoPlaca} foi resolvida.`, 'Sucesso');
         this.fecharModalResolver();
-        this.carregarOcorrencias(); // Atualiza a lista
+        this.carregarOcorrencias();
       },
       error: (err) => {
-        // Exibe o erro dentro do modal
         this.modalErrorMessage = err.error?.message || 'Não foi possível resolver a ocorrência.';
       }
     });

@@ -1,0 +1,12 @@
+<ng-container *ngIf="modalState$ | async as state">
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <h3>Confirmar Ação</h3>
+            <p>{{ state.message }}</p>
+            <div class="modal-actions">
+                <button (click)="confirmationService.cancel()" class="btn-secondary">Cancelar</button>
+                <button (click)="confirmationService.confirm(state)" class="btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</ng-container>

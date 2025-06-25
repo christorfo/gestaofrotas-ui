@@ -30,8 +30,10 @@
           <td class="actions-cell">
             <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
               class="btn-action">Editar</button>
-            <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id)"
-              class="btn-action btn-success">Liberar</button>
+            <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id, veiculo.placa)"
+              class="btn-action btn-success">
+              Liberar
+            </button>
             <button *ngIf="veiculo.status !== 'INATIVO'" [routerLink]="['/admin/abastecimentos/novo', veiculo.id]"
               class="btn-action btn-warning">
               Abastecer

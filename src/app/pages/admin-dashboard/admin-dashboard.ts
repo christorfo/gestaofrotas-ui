@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmationService } from '../../services/confirmation';
 
 // Importação de todos os modelos e serviços necessários
 import { Veiculo } from '../../models/veiculo.model';
@@ -29,6 +30,7 @@ export class AdminDashboardComponent implements OnInit {
   private ocorrenciaService = inject(OcorrenciaService);
   private cdr = inject(ChangeDetectorRef); // Injetando o Change Detector
   private toastr = inject(ToastrService); // Injetando o Toastr Service
+  private confirmationService = inject(ConfirmationService);
 
   // Propriedades para armazenar os dados das listas
   veiculos: Veiculo[] = [];
@@ -129,20 +131,22 @@ export class AdminDashboardComponent implements OnInit {
     this.carregarAgendamentos();
   }
 
-  onLiberarVeiculo(id: number): void {
-    if (confirm('Tem certeza que deseja liberar este veículo da manutenção?')) {
+  onLiberarVeiculo(id: number, placa: string): void {
+    const message = `Tem certeza que deseja liberar o veículo de placa ${placa} da manutenção?`;
+
+    // Usa o serviço de confirmação em vez do 'confirm()' do navegador
+    this.confirmationService.open(message, () => {
+      // Esta função (callback) só é executada se o usuário clicar em "Confirmar" no modal
       this.veiculoService.liberarVeiculo(id).subscribe({
         next: (veiculoAtualizado) => {
-          // 3. Notificação de SUCESSO
-          this.toastr.success(`Veículo ${veiculoAtualizado.placa} liberado com sucesso!`);
-          this.carregarVeiculos(); // Atualiza a lista
+          this.toastr.success(`Veículo ${veiculoAtualizado.placa} liberado com sucesso!`, 'Sucesso');
+          this.carregarVeiculos();
         },
         error: (err) => {
-          // 4. Notificação de ERRO
           this.toastr.error(err.error?.message || 'Não foi possível liberar o veículo.', 'Erro');
         }
       });
-    }
+    });
   }
 
   // 1. Abre o modal e guarda a ocorrência selecionada

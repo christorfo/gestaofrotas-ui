@@ -15,37 +15,40 @@
 
     <div class="form-group">
       <label for="modelo">Modelo</label>
-      <input type="text" id="modelo" name="modelo" [(ngModel)]="veiculo.modelo" required #modeloInput="ngModel">
+      <input type="text" id="modelo" name="modelo" [(ngModel)]="veiculo.modelo" required #modeloInput="ngModel"
+        pattern="[a-zA-ZÀ-ú\s]*">
       <div *ngIf="modeloInput.invalid && (modeloInput.dirty || modeloInput.touched)" class="error-message">
         <div *ngIf="modeloInput.errors?.['required']">O modelo é obrigatório.</div>
+        <div *ngIf="modeloInput.errors?.['pattern']">O modelo deve conter apenas letras e espaços.</div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="tipo">Tipo</label>
-      <input type="text" id="tipo" name="tipo" [(ngModel)]="veiculo.tipo" required #tipoInput="ngModel">
+      <input type="text" id="tipo" name="tipo" [(ngModel)]="veiculo.tipo" required #tipoInput="ngModel"
+        pattern="[a-zA-ZÀ-ú\s]*">
       <div *ngIf="tipoInput.invalid && (tipoInput.dirty || tipoInput.touched)" class="error-message">
         <div *ngIf="tipoInput.errors?.['required']">O tipo é obrigatório.</div>
+        <div *ngIf="tipoInput.errors?.['pattern']">O tipo deve conter apenas letras e espaços.</div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="ano">Ano</label>
-      <input type="number" id="ano" name="ano" [(ngModel)]="veiculo.ano" required min="1980" max="2099"
-        #anoInput="ngModel">
+      <input type="text" id="ano" name="ano" [(ngModel)]="veiculo.ano" required minlength="4" maxlength="4"
+        #anoInput="ngModel" mask="0000">
       <div *ngIf="anoInput.invalid && (anoInput.dirty || anoInput.touched)" class="error-message">
         <div *ngIf="anoInput.errors?.['required']">O ano é obrigatório.</div>
-        <div *ngIf="anoInput.errors?.['min'] || anoInput.errors?.['max']">Por favor, insira um ano válido.</div>
+        <div *ngIf="anoInput.errors?.['minlength']">O ano deve conter 4 dígitos.</div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="quilometragem">Quilometragem Atual</label>
-      <input type="tel" id="quilometragem" name="quilometragem" [(ngModel)]="veiculo.quilometragemAtual" required
-        min="0" #kmInput="ngModel" mask="separator" thousandSeparator=".">
+      <input type="text" id="quilometragem" name="quilometragem" [(ngModel)]="veiculo.quilometragemAtual" required
+        #kmInput="ngModel" mask="separator" thousandSeparator=".">
       <div *ngIf="kmInput.invalid && (kmInput.dirty || kmInput.touched)" class="error-message">
         <div *ngIf="kmInput.errors?.['required']">A quilometragem é obrigatória.</div>
-        <div *ngIf="kmInput.errors?.['min']">A quilometragem não pode ser negativa.</div>
       </div>
     </div>
 

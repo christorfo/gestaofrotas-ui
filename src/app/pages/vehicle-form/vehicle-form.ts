@@ -45,8 +45,8 @@ export class VehicleFormComponent {
         placa: '',
         modelo: '',
         tipo: '',
-        ano: new Date().getFullYear(),
-        quilometragemAtual: 0,
+        ano: undefined,
+        quilometragemAtual: undefined,
         status: 'DISPONIVEL'
       };
     }

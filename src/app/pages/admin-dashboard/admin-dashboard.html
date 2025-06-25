@@ -28,24 +28,25 @@
           <td>{{ veiculo.status }}</td>
           <td>{{ veiculo.quilometragemAtual | number:'1.0-0' }} km</td>
           <td class="actions-cell">
-
-            <ng-container *ngIf="veiculo.status === 'DISPONIVEL'">
-              <button [routerLink]="['/admin/veiculos/editar', veiculo.id]" class="btn-action">Editar</button>
-              <button [routerLink]="['/admin/abastecimentos/novo', veiculo.id]"
-                class="btn-action btn-secondary">Abastecer</button>
-              <button [routerLink]="['/admin/manutencoes/novo', veiculo.id]"
-                class="btn-action btn-secondary">Manutenção</button>
-            </ng-container>
-
+            <button *ngIf="veiculo.status === 'DISPONIVEL'" [routerLink]="['/admin/veiculos/editar', veiculo.id]"
+              class="btn-action">
+              Editar
+            </button>
             <button *ngIf="veiculo.status === 'EM_MANUTENCAO'" (click)="onLiberarVeiculo(veiculo.id, veiculo.placa)"
               class="btn-action btn-success">
               Liberar
             </button>
 
-            <button *ngIf="veiculo.status !== 'INATIVO'" [routerLink]="['/admin/veiculos/detalhes', veiculo.id]"
-              class="btn-action btn-secondary">
-              Detalhes
-            </button>
+            <div class="actions-menu-container" *ngIf="veiculo.status !== 'INATIVO'">
+              <button class="btn-action-more">...</button>
+              <div class="dropdown-menu">
+                <a [routerLink]="['/admin/veiculos/detalhes', veiculo.id]">Ver Detalhes</a>
+                <a *ngIf="veiculo.status === 'DISPONIVEL'"
+                  [routerLink]="['/admin/abastecimentos/novo', veiculo.id]">Registrar Abastecimento</a>
+                <a *ngIf="veiculo.status === 'DISPONIVEL'"
+                  [routerLink]="['/admin/manutencoes/novo', veiculo.id]">Registrar Manutenção</a>
+              </div>
+            </div>
 
             <span *ngIf="veiculo.status === 'INATIVO'">Inativo</span>
           </td>

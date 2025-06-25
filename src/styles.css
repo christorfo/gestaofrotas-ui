@@ -283,3 +283,56 @@ button:disabled,
   justify-content: flex-end;
   gap: 12px;
 }
+
+.actions-menu-container {
+  position: relative;
+  /* Define o contexto de posicionamento para o menu */
+  display: inline-block;
+}
+
+.btn-action-more {
+  background: none;
+  border: 1px solid var(--cor-borda);
+  color: var(--texto-secundario);
+  padding: 4px 10px;
+  font-weight: bold;
+}
+
+.btn-action-more:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.dropdown-menu {
+  display: none;
+  /* O menu começa escondido */
+  position: absolute;
+  right: 0;
+  top: 100%;
+  /* Posiciona logo abaixo do botão */
+  background-color: var(--cor-superficie);
+  min-width: 200px;
+  box-shadow: var(--sombra-hover);
+  z-index: 10;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--cor-borda);
+  padding: 0.5rem 0;
+}
+
+/* O "truque" do CSS: mostra o menu quando o mouse está sobre o container */
+.actions-menu-container:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu a {
+  color: var(--texto-principal);
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f3f4f6;
+}

@@ -5,11 +5,12 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ManutencaoRequest, TipoManutencao } from '../../models/manutencao.model';
 import { ManutencaoService } from '../../services/manutencao';
 import { ToastrService } from 'ngx-toastr';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-manutencao-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, NgxMaskDirective],
   templateUrl: './manutencao-form.html',
   styleUrls: ['./manutencao-form.css']
 })
@@ -39,6 +40,12 @@ export class ManutencaoFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const payload = { ...this.manutencao };
+
+    // Limpa a formatação da máscara antes de converter para número
+    payload.quilometragem = Number(String(payload.quilometragem).replace(/\./g, ''));
+    payload.valor = Number(String(payload.valor).replace(/\./g, '').replace(',', '.'));
+
     this.manutencaoService.registrarManutencao(this.manutencao).subscribe({
       next: () => {
         // 3. Exibe uma notificação de SUCESSO

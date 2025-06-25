@@ -19,13 +19,14 @@
 
         <div class="form-group">
             <label for="quilometragem">Quilometragem</label>
-            <input type="number" id="quilometragem" name="quilometragem" [(ngModel)]="manutencao.quilometragem"
-                required>
+            <input type="text" id="quilometragem" name="quilometragem" [(ngModel)]="manutencao.quilometragem" required
+                mask="separator" thousandSeparator=".">
         </div>
 
         <div class="form-group">
             <label for="valor">Valor (R$)</label>
-            <input type="number" id="valor" name="valor" [(ngModel)]="manutencao.valor" required>
+            <input type="text" id="valor" name="valor" [(ngModel)]="manutencao.valor" required min="0"
+                placeholder="R$ 0,00" mask="separator.2" thousandSeparator="." decimalMarker="," prefix="R$ ">
         </div>
 
         <div class="form-group">
